@@ -1,75 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 360" role="img" aria-labelledby="title desc">
   <title id="title">木と鉄で作られた鉱山用トロッコ</title>
-  <desc id="desc">手前から奥へ進む方向を意識した、木製の箱と鉄製のフレームを持つ鉱山用トロッコ</desc>
+  <desc id="desc">手前から奥へ進む一人称視点を意識した、木板と黒い鉄枠の鉱山用トロッコの前縁</desc>
   <defs>
-    <linearGradient id="woodFront" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#a97843"/>
-      <stop offset="1" stop-color="#6f4726"/>
-    </linearGradient>
-    <linearGradient id="woodSide" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#bd8950"/>
-      <stop offset="1" stop-color="#744a28"/>
-    </linearGradient>
-    <linearGradient id="woodTop" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#d2a06a"/>
-      <stop offset="1" stop-color="#9a6939"/>
-    </linearGradient>
-    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#4e5558"/>
-      <stop offset="0.5" stop-color="#252b2e"/>
-      <stop offset="1" stop-color="#0f1416"/>
-    </linearGradient>
-    <linearGradient id="ironHighlight" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#8c9495"/>
-      <stop offset="1" stop-color="#3e4547"/>
-    </linearGradient>
-    <filter id="shadow" x="-30%" y="-30%" width="160%" height="180%">
-      <feDropShadow dx="0" dy="16" stdDeviation="10" flood-color="#172017" flood-opacity="0.3"/>
-    </filter>
+    <linearGradient id="frontWood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7b4b27"/><stop offset=".35" stop-color="#59331c"/><stop offset="1" stop-color="#281a12"/></linearGradient>
+    <linearGradient id="sideWood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b27a43"/><stop offset=".5" stop-color="#714522"/><stop offset="1" stop-color="#3b2517"/></linearGradient>
+    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#191f20"/><stop offset=".22" stop-color="#8f9694"/><stop offset=".42" stop-color="#333a3a"/><stop offset=".68" stop-color="#747b78"/><stop offset="1" stop-color="#171d1d"/></linearGradient>
+    <linearGradient id="topWood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#744321"/><stop offset="1" stop-color="#24170f"/></linearGradient>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="11" stdDeviation="9" flood-color="#183018" flood-opacity=".42"/></filter>
   </defs>
-
-  <g filter="url(#shadow)">
-    <!-- Rear / body of the cart: broad in front, visually tapering toward the travel direction -->
-    <path d="M92 116 L368 116 L332 271 L128 271 Z" fill="url(#woodFront)" stroke="#252a2b" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M92 116 L230 55 L368 116 L332 271 L230 310 L128 271 Z" fill="url(#woodSide)" stroke="#252a2b" stroke-width="8" stroke-linejoin="round" opacity="0.98"/>
-    <path d="M92 116 L230 55 L368 116 L230 171 Z" fill="url(#woodTop)" stroke="#24292a" stroke-width="8" stroke-linejoin="round"/>
-
-    <!-- Wooden planks -->
-    <path d="M125 132 L230 83 L335 130" fill="none" stroke="#5c3920" stroke-width="7" stroke-linecap="round" opacity="0.7"/>
-    <path d="M137 185 L230 146 L323 185" fill="none" stroke="#5b381f" stroke-width="6" stroke-linecap="round" opacity="0.55"/>
-    <path d="M148 235 L230 201 L312 235" fill="none" stroke="#4d301c" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
-
-    <!-- Heavy iron rim -->
-    <path d="M80 112 L230 42 L380 112" fill="none" stroke="url(#iron)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round"/>
-    <path d="M86 112 L230 49 L374 112" fill="none" stroke="url(#ironHighlight)" stroke-width="5" stroke-linecap="round" opacity="0.72"/>
-    <path d="M90 112 L230 169 L370 112" fill="none" stroke="#171c1e" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-
-    <!-- Corner straps -->
-    <path d="M108 119 L124 268" stroke="url(#iron)" stroke-width="16" stroke-linecap="round"/>
-    <path d="M352 119 L336 268" stroke="url(#iron)" stroke-width="16" stroke-linecap="round"/>
-    <path d="M116 144 L344 144" stroke="#2a3032" stroke-width="9" stroke-linecap="round"/>
-    <circle cx="119" cy="145" r="7" fill="#9a9c99" stroke="#333839" stroke-width="4"/>
-    <circle cx="341" cy="145" r="7" fill="#9a9c99" stroke="#333839" stroke-width="4"/>
-
-    <!-- Axle and wheels, shown at a three-quarter rear angle -->
-    <path d="M110 282 L350 282" stroke="#191e20" stroke-width="18" stroke-linecap="round"/>
-    <path d="M119 279 L341 279" stroke="#77807f" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
-
-    <g>
-      <ellipse cx="133" cy="303" rx="34" ry="47" fill="#171b1c" stroke="#0d1011" stroke-width="7" transform="rotate(-12 133 303)"/>
-      <ellipse cx="133" cy="303" rx="16" ry="27" fill="url(#ironHighlight)" stroke="#24292a" stroke-width="5" transform="rotate(-12 133 303)"/>
-      <circle cx="133" cy="303" r="6" fill="#1a1f20"/>
-      <path d="M117 291 L150 313 M121 316 L146 286" stroke="#aeb4b2" stroke-width="3" opacity="0.5"/>
+  <g filter="url(#drop)">
+    <!-- Foremost wooden rim of the cart, viewed from the seat -->
+    <path d="M20 205 L74 158 L385 158 L440 205 L420 326 L40 326 Z" fill="url(#sideWood)" stroke="#201914" stroke-width="11" stroke-linejoin="round"/>
+    <path d="M20 205 L74 158 L385 158 L440 205 L230 263 Z" fill="url(#topWood)" stroke="#201914" stroke-width="9" stroke-linejoin="round"/>
+    <path d="M20 205 L230 263 L230 348 L40 326 Z" fill="url(#frontWood)" stroke="#1b1511" stroke-width="10" stroke-linejoin="round"/>
+    <path d="M440 205 L230 263 L230 348 L420 326 Z" fill="url(#sideWood)" stroke="#1b1511" stroke-width="10" stroke-linejoin="round"/>
+    <!-- Wooden slats and grain -->
+    <path d="M56 228 L225 276 M49 260 L225 307 M43 293 L225 336" stroke="#b17b48" stroke-width="5" opacity=".62"/>
+    <path d="M404 228 L235 276 M411 260 L235 307 M417 293 L235 336" stroke="#d19a5d" stroke-width="5" opacity=".43"/>
+    <path d="M90 180 L230 222 L370 180" fill="none" stroke="#c08a50" stroke-width="5" opacity=".45"/>
+    <!-- Iron top rail / corner brackets -->
+    <path d="M20 205 L74 158 L385 158 L440 205" fill="none" stroke="#171c1d" stroke-width="18" stroke-linejoin="round"/>
+    <path d="M23 201 L76 162 L383 162 L437 201" fill="none" stroke="url(#iron)" stroke-width="8" stroke-linejoin="round"/>
+    <path d="M38 212 L55 321 M78 168 L94 244 M422 212 L405 321 M382 168 L366 244" stroke="#202626" stroke-width="13" stroke-linecap="round"/>
+    <path d="M42 214 L58 317 M81 171 L96 241 M418 214 L402 317 M379 171 L364 241" stroke="#8a8e88" stroke-width="3" opacity=".8"/>
+    <!-- Rivets -->
+    <g fill="#a6aaa2" stroke="#272d2c" stroke-width="4">
+      <circle cx="75" cy="165" r="7"/><circle cx="385" cy="165" r="7"/>
+      <circle cx="47" cy="232" r="6"/><circle cx="62" cy="295" r="6"/>
+      <circle cx="413" cy="232" r="6"/><circle cx="398" cy="295" r="6"/>
     </g>
-
-    <g>
-      <ellipse cx="327" cy="303" rx="34" ry="47" fill="#171b1c" stroke="#0d1011" stroke-width="7" transform="rotate(12 327 303)"/>
-      <ellipse cx="327" cy="303" rx="16" ry="27" fill="url(#ironHighlight)" stroke="#24292a" stroke-width="5" transform="rotate(12 327 303)"/>
-      <circle cx="327" cy="303" r="6" fill="#1a1f20"/>
-      <path d="M311 313 L344 291 M312 286 L338 316" stroke="#aeb4b2" stroke-width="3" opacity="0.5"/>
-    </g>
-
-    <!-- Small front coupler pointing toward the horizon -->
-    <path d="M215 173 L230 154 L245 173 L230 188 Z" fill="url(#iron)" stroke="#171c1e" stroke-width="6"/>
+    <!-- Small worn iron plates -->
+    <path d="M98 184 L126 192 M334 192 L362 184" stroke="#1e2424" stroke-width="9" stroke-linecap="round"/>
+    <path d="M102 182 L125 189 M335 189 L358 182" stroke="#b1b5ac" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
   </g>
 </svg>
