@@ -41,7 +41,7 @@
         };
       }),
       disclaimer: '一致率は今回の問題に対する回答の一致割合です。価値観全般や倫理的な優劣を示すものではありません。AIの回答は動作確認用のモックデータです。',
-      primaryLabel: isLast ? '3問の比較結果を見る' : '次の問題へ',
+      primaryLabel: isLast ? `${core.QUESTIONS.length}問の比較結果を見る` : '次の問題へ',
       restartLabel: '診断を最初からやり直す',
       isSummary: false,
     };
@@ -52,10 +52,10 @@
     const mine = Object.fromEntries(ids.map((id) => [id, answers[id] && answers[id].selected_option_id]));
     return {
       kicker: 'DIAGNOSIS SUMMARY',
-      title: '3問の比較結果',
+      title: `${ids.length}問の比較結果`,
       selected: `${ids.length}問すべてに回答しました。`,
       comparisonTitle: 'AI別の回答一致率',
-      comparisonNote: '今回の3問の集計',
+      comparisonNote: `今回の${ids.length}問の集計`,
       rows: models.map((m) => {
         const s = core.calculateMatchStats(mine, m.answers, ids);
         const r = s.questionResults;
@@ -66,7 +66,7 @@
           rate: s.rate,
         };
       }),
-      disclaimer: 'この一致率は、今回実装した3問の回答パターンの類似度です。価値観全般の一致率や、AI・利用者の倫理的な優劣を示しません。問題セットは心理学的に検証済みの診断尺度ではありません。',
+      disclaimer: `この一致率は、今回実装した${ids.length}問の回答パターンの類似度です。価値観全般の一致率や、AI・利用者の倫理的な優劣を示しません。問題セットは心理学的に検証済みの診断尺度ではありません。`,
       primaryLabel: null,
       restartLabel: '診断を最初からやり直す',
       isSummary: true,
