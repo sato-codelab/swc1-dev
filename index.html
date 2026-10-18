@@ -23,16 +23,10 @@
 
     <section class="question-card" aria-labelledby="questionTitle">
       <div class="question-heading">
-        <div class="question-number" id="questionNumber">Q01｜倫理的ジレンマ</div>
-        <h2 id="questionTitle">5人を救うために進路を変えるか</h2>
-        <p class="question-body" id="questionBody">あなたは走行中のトロッコに乗っています。
-
-前方の線路には5人がいます。このまま進むと、5人に衝突します。
-
-あなたの目の前には進路を変えるレバーがあります。レバーを倒すと別の線路へ進みますが、その線路には1人がいます。
-
-ほかにトロッコを止める方法はありません。</p>
-        <p class="question-note" id="questionNote">正解・不正解はありません。あなた自身ならどちらを選ぶか答えてください。</p>
+        <div class="question-number" id="questionNumber"></div>
+        <h2 id="questionTitle"></h2>
+        <p class="question-body" id="questionBody"></p>
+        <p class="question-note" id="questionNote"></p>
       </div>
     </section>
 
@@ -48,9 +42,8 @@
 
         <div class="distant-tree tree-left"><i></i><b></b></div>
         <div class="distant-tree tree-right"><i></i><b></b></div>
-        <div class="group-people" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div>
-        <div class="choice-landmark landmark-left"><span class="cliff-cap"></span><span class="cliff-face"></span></div>
-        <div class="choice-landmark landmark-right"><span class="person-head"></span><span class="person-body"></span></div>
+        <div class="target target-left" id="targetLeft"><span class="target-badge"></span><span class="target-head"></span><span class="target-body"></span></div>
+        <div class="target target-right" id="targetRight"><span class="target-badge"></span><span class="target-head"></span><span class="target-body"></span></div>
 
         <div class="track" aria-hidden="true">
           <div class="track-ties"></div>
@@ -87,11 +80,11 @@
       <div class="choices" id="choices" role="group" aria-label="回答選択">
         <button class="choice choice-left" data-position="left" type="button">
           <span class="choice-arrow" aria-hidden="true">←</span>
-          <span class="choice-copy"><strong>左へ傾ける</strong><small>崖の方向へ</small></span>
+          <span class="choice-copy"><strong></strong><small></small></span>
         </button>
         <button class="choice choice-right" data-position="right" type="button">
           <span class="choice-arrow" aria-hidden="true">→</span>
-          <span class="choice-copy"><strong>右へ傾ける</strong><small>1人がいる方向へ</small></span>
+          <span class="choice-copy"><strong></strong><small></small></span>
         </button>
       </div>
 
@@ -110,9 +103,13 @@
         </section>
       </div>
     </section>
-    <footer class="page-foot">全3問に回答すると、AIごとの回答一致率を確認できます。 <span>外部通信なし・回答はこのブラウザに保存</span></footer>
+    <footer class="page-foot">全3問に回答すると、AIごとの回答一致率を確認できます。 <span>← → キーでも選択できます ・ 外部通信なし・回答はこのブラウザに保存</span></footer>
   </main>
   <script src="app-core.js" defer></script>
-  <script src="script.js" defer></script>
+  <script src="store.js" defer></script>
+  <script src="presenter.js" defer></script>
+  <script src="scene.js" defer></script>
+  <script src="view.js" defer></script>
+  <script src="app.js" defer></script>
 </body>
 </html>
