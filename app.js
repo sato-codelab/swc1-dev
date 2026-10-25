@@ -5,6 +5,7 @@
   const core = window.AppCore;
   const models = core.MOCK_AI_MODELS;
   const store = AppStore.create({ core, adapter: AppStore.localStorageAdapter('value-judgment-ai-matching-week2-v1') });
+  const settings = AppStore.createSettings(AppStore.localStorageAdapter('value-judgment-ai-matching-settings-v1'));
   const view = AppView.create(document);
   const scene = AppScene.create(document);
   let locked = false;
@@ -30,6 +31,10 @@
     scene.setTargets({ left: left.code, right: right.code });
   }
 
+  function showStart() {
+    view.showStart(AppPresenter.start({ answered: Object.keys(store.answers).length, total: store.total, nextIndex: store.index }));
+  }
+
   function showQuestionResult() {
     const q = store.question();
     view.showResult(AppPresenter.questionResult({ core, question: q, answer: store.answers[q.id], models, isLast: store.isLast() }));
@@ -39,16 +44,21 @@
     view.showResult(AppPresenter.summary({ core, answers: store.answers, models }));
   }
 
+  view.onStart(() => view.hideStart());
+  view.onStartRestart(() => { store.reset(); showQuestion(); view.hideStart(); });
   view.onChoose(({ optionId, position }) => {
     if (locked || !store.answer(optionId, position)) return;
     locked = true;
     view.lockChoices(optionId);
-    scene.playChoice(position, showQuestionResult);
+    scene.playChoice(position, showQuestionResult, { instant: settings.skipAnimation });
   });
+  view.onSkip(() => scene.skip());
   view.onNext(() => { if (store.advance()) showQuestion(); else showSummary(); });
   view.onRestart(() => { store.reset(); showQuestion(); });
+  view.onHome(() => { store.reset(); showQuestion(); showStart(); });
+  view.bindOptions(() => ({ skipAnimation: settings.skipAnimation }), (on) => settings.set('skipAnimation', on));
 
   const completed = store.restore();
   showQuestion();
-  if (completed) showSummary();
+  if (completed) showSummary(); else showStart();
 })();

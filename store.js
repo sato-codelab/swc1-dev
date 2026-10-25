@@ -64,5 +64,14 @@
     return store;
   }
 
-  root.AppStore = { create, localStorageAdapter };
+  /** User options live under a separate key so restarting a diagnosis never clears them. */
+  function createSettings(adapter) {
+    const s = Object.assign({ skipAnimation: false }, adapter.load());
+    return {
+      get skipAnimation() { return s.skipAnimation === true; },
+      set(key, value) { s[key] = value; adapter.save(s); },
+    };
+  }
+
+  root.AppStore = { create, createSettings, localStorageAdapter };
 })(window);

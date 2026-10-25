@@ -47,16 +47,15 @@
     };
   }
 
+  function start({ answered, total, nextIndex }) {
+    const resume = answered > 0 && answered < total;
+    return { primaryLabel: resume ? `続きから再開（Q${nextIndex + 1}）` : '診断をはじめる', canRestart: resume };
+  }
+
   function summary({ core, answers, models }) {
     const ids = core.QUESTIONS.map((q) => q.id);
     const mine = Object.fromEntries(ids.map((id) => [id, answers[id] && answers[id].selected_option_id]));
-    return {
-      kicker: 'DIAGNOSIS SUMMARY',
-      title: `${ids.length}問の比較結果`,
-      selected: `${ids.length}問すべてに回答しました。`,
-      comparisonTitle: 'AI別の回答一致率',
-      comparisonNote: `今回の${ids.length}問の集計`,
-      rows: models.map((m) => {
+    const rows = models.map((m) => {
         const s = core.calculateMatchStats(mine, m.answers, ids);
         const r = s.questionResults;
         return {
@@ -65,13 +64,23 @@
           detail: ids.map((id) => `${id}：${r[id] === undefined ? '未比較' : r[id] ? '一致' : '不一致'}`).join(SEP),
           rate: s.rate,
         };
-      }),
+      });
+    const max = Math.max(0, ...rows.map((r) => r.rate || 0));
+    rows.forEach((r) => { if (max > 0 && r.rate === max) { r.badge = '最も近い'; r.top = true; } });
+    const top = rows.filter((r) => r.top).map((r) => r.name).join('・');
+    return {
+      kicker: 'DIAGNOSIS COMPLETE',
+      title: '診断が終了しました',
+      selected: top ? `${ids.length}問すべてに回答しました。回答が最も近かったのは ${top}（${max}%）です。` : `${ids.length}問すべてに回答しました。`,
+      comparisonTitle: 'AI別の回答一致率',
+      comparisonNote: `今回の${ids.length}問の集計`,
+      rows,
       disclaimer: `この一致率は、今回実装した${ids.length}問の回答パターンの類似度です。価値観全般の一致率や、AI・利用者の倫理的な優劣を示しません。問題セットは心理学的に検証済みの診断尺度ではありません。`,
       primaryLabel: null,
-      restartLabel: '診断を最初からやり直す',
+      restartLabel: 'もう一度診断する',
       isSummary: true,
     };
   }
 
-  root.AppPresenter = { question, choice, questionResult, summary };
+  root.AppPresenter = { question, choice, questionResult, start, summary };
 })(window);

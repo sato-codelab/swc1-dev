@@ -1,36 +1,77 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 360" role="img" aria-labelledby="title desc">
-  <title id="title">木と鉄で作られた鉱山用トロッコ</title>
-  <desc id="desc">手前から奥へ進む一人称視点を意識した、木板と黒い鉄枠の鉱山用トロッコの前縁</desc>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 460 360" role="img" aria-labelledby="title desc" xmlns:c2pa="http://c2pa.org/manifest"><metadata><c2pa:manifest>AAAWgmp1bWIAAAAeanVtZGMycGEAEQAQgAAAqgA4m3EDYzJwYQAAABZcanVtYgAAAEdqdW1kYzJtYQARABCAAACqADibcQN1cm46YzJwYTozN2RkMzA2ZC01M2RmLTQyYzUtYjhmZC1lMGM3ZTU2ZDkwYTMAAAADl2p1bWIAAAApanVtZGMyYXMAEQAQgAAAqgA4m3EDYzJwYS5hc3NlcnRpb25zAAAAALxqdW1iAAAARGp1bWRjYm9yABEAEIAAAKoAOJtxE2MycGEuaW5ncmVkaWVudC52MwAAAAAYYzJzaHZ9srAtVolCUFtobpt28+kAAABwY2JvcqNpZGM6Zm9ybWF0bWltYWdlL3N2Zyt4bWxqaW5zdGFuY2VJRHgseG1wOmlpZDo4ZmZmYmE2ZC0wYTg5LTRlOGEtOWQ3NS04Y2VkNWZiZWJlYTlscmVsYXRpb25zaGlwaHBhcmVudE9mAAAB4mp1bWIAAABBanVtZGNib3IAEQAQgAAAqgA4m3ETYzJwYS5hY3Rpb25zLnYyAAAAABhjMnNoD1uuhMriYRuke01s5C3zxAAAAZljYm9yomdhY3Rpb25zgqJmYWN0aW9ua2MycGEub3BlbmVkanBhcmFtZXRlcnOha2luZ3JlZGllbnRzgaJjdXJseC1zZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmluZ3JlZGllbnQudjNkaGFzaFggZsyCO30jn/b7GHLx5kR2PDKB8EvkiVJpdydn9E+afdukZmFjdGlvbngdY29tLmFudGhyb3BpYy5jbGF1ZGUucHJvdmlkZWRqcGFyYW1ldGVyc6F4H2NvbS5hbnRocm9waWMub3JpZ2luLWNvbmZpZGVuY2VndW5rbm93bmtkZXNjcmlwdGlvbnhmQ2xhdWRlIHByb3ZpZGVkIHRoaXMgZmlsZSBhdCB0aGUgcmVxdWVzdCBvZiBhIHVzZXIgYW5kIG1heSBoYXZlIGNyZWF0ZWQgb3IgbW9kaWZpZWQgdGhlIGZpbGUgY29udGVudHMubXNvZnR3YXJlQWdlbnShZG5hbWVmQ2xhdWRlcmFsbEFjdGlvbnNJbmNsdWRlZPUAAADIanVtYgAAAEBqdW1kY2JvcgARABCAAACqADibcRNjMnBhLmhhc2guZGF0YQAAAAAYYzJzaOc4/lhU3XgWUiy5D6hEFfkAAACAY2JvcqVjYWxnZnNoYTI1NmNwYWRNAAAAAAAAAAAAAAAAAGRoYXNoWCDC5xVoBuLCEIn7nX5uH6ZX3onM+h2Ju2nPFPbCe0umW2RuYW1lbmp1bWJmIG1hbmlmZXN0amV4Y2x1c2lvbnOBomVzdGFydBilZmxlbmd0aBkeBAAAAj5qdW1iAAAAJ2p1bWRjMmNsABEAEIAAAKoAOJtxA2MycGEuY2xhaW0udjIAAAACD2Nib3KlY2FsZ2ZzaGEyNTZpc2lnbmF0dXJleE1zZWxmI2p1bWJmPS9jMnBhL3VybjpjMnBhOjM3ZGQzMDZkLTUzZGYtNDJjNS1iOGZkLWUwYzdlNTZkOTBhMy9jMnBhLnNpZ25hdHVyZWppbnN0YW5jZUlEeCx4bXA6aWlkOjkyZjI5MjVhLWI0OTctNGRhOS1iOWRkLTMxMjNlYmNlZjllOHJjcmVhdGVkX2Fzc2VydGlvbnODomN1cmx4LXNlbGYjanVtYmY9YzJwYS5hc3NlcnRpb25zL2MycGEuaW5ncmVkaWVudC52M2RoYXNoWCBmzII7fSOf9vsYcvHmRHY8MoHwS+SJUml3J2f0T5p926JjdXJseCpzZWxmI2p1bWJmPWMycGEuYXNzZXJ0aW9ucy9jMnBhLmFjdGlvbnMudjJkaGFzaFggob1HDdvweObErwg7k8IeXfj7Z4OmZX+ylUjeRJalq86iY3VybHgpc2VsZiNqdW1iZj1jMnBhLmFzc2VydGlvbnMvYzJwYS5oYXNoLmRhdGFkaGFzaFggUWcMXe7g/+HVW7xp5KJ3pkV9hzKLiQZ41qREgwHIxzx0Y2xhaW1fZ2VuZXJhdG9yX2luZm+jZG5hbWVvQW50aHJvcGljIEZpbGVzZ3ZlcnNpb25lMS4wLjBrc3BlY1ZlcnNpb25lMi40LjAAABA4anVtYgAAAChqdW1kYzJjcwARABCAAACqADibcQNjMnBhLnNpZ25hdHVyZQAAABAIY2JvctKEWQISogEmGCFZAgowggIGMIIBjaADAgECAhRA5aAK7sI50L64g/oGQgU9Z1UTADAKBggqhkjOPQQDAzBJMRcwFQYDVQQKEw5BbnRocm9waWMsIFBCQzEuMCwGA1UEAxMlQW50aHJvcGljIENvbnRlbnQgQ3JlZGVudGlhbHMgUm9vdCBDQTAeFw0yNjA4MDcxODQzNTZaFw0yODA4MDYxOTQzNTZaMEQxFzAVBgNVBAoTDkFudGhyb3BpYywgUEJDMSkwJwYDVQQDEyBBbnRocm9waWMgQ2xhdWRlIENvbnRlbnQgU2lnbmluZzBZMBMGByqGSM49AgEGCCqGSM49AwEHA0IABJh6CmvLUBgFFNU0vUKlOVtE6djd17L5SuwX0LemFisBM3dkd/3cyjxFA3Qo5S46fX0/ihY0VZ7mfb9KF703t5OjWDBWMA4GA1UdDwEB/wQEAwIHgDAVBgNVHSUEDjAMBgorBgEEAYPoXgIBMAwGA1UdEwEB/wQCMAAwHwYDVR0jBBgwFoAUzlHiBIFOZFsj+OPEz5o+nMHXXMIwCgYIKoZIzj0EAwMDZwAwZAIwMXMdFJ4BetLLVY7ORuE9noqbbAZOZn/aArXyTwFAZfKrPzxF2vPoJNf1+UCdg1XGAjBwX1zd9WGqYkqmL5SFqw1QySjr1zJfpJM9+1rdDwSPLMOPOjKuiXjoU/pUUeG9RwmhY3BhZFkNngAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAPZYQAL7l6zOufdeTy5THOYfTlDrJpZwBCZVAUxzewD75D1YoqbUO0N/c2yStWVT/PE+0zc8t8MHkcL5cPG5r3VnvwI=</c2pa:manifest></metadata>
+  <title id="title">後ろ姿の鉱山用トロッコ</title>
+  <desc id="desc">手前から奥へ走り去っていく木と鉄の鉱山用トロッコを、後ろ側から見た図。後面の木板、鉄の補強帯、リベット、連結リング、後輪が見える。</desc>
   <defs>
-    <linearGradient id="frontWood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7b4b27"/><stop offset=".35" stop-color="#59331c"/><stop offset="1" stop-color="#281a12"/></linearGradient>
-    <linearGradient id="sideWood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b27a43"/><stop offset=".5" stop-color="#714522"/><stop offset="1" stop-color="#3b2517"/></linearGradient>
-    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#191f20"/><stop offset=".22" stop-color="#8f9694"/><stop offset=".42" stop-color="#333a3a"/><stop offset=".68" stop-color="#747b78"/><stop offset="1" stop-color="#171d1d"/></linearGradient>
+    <linearGradient id="rearWood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#8a5629"/><stop offset=".4" stop-color="#64391e"/><stop offset="1" stop-color="#2c1c12"/></linearGradient>
+    <linearGradient id="rimWood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#b27a43"/><stop offset=".5" stop-color="#714522"/><stop offset="1" stop-color="#3b2517"/></linearGradient>
     <linearGradient id="topWood" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#744321"/><stop offset="1" stop-color="#24170f"/></linearGradient>
-    <filter id="drop" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="11" stdDeviation="9" flood-color="#183018" flood-opacity=".42"/></filter>
+    <linearGradient id="farWall" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#4a2c17"/><stop offset="1" stop-color="#120b07"/></linearGradient>
+    <linearGradient id="innerL" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#2a1a10"/><stop offset="1" stop-color="#150d08"/></linearGradient>
+    <linearGradient id="innerR" x1="1" y1="0" x2="0" y2="0"><stop stop-color="#4a2e19"/><stop offset="1" stop-color="#1c110a"/></linearGradient>
+    <linearGradient id="iron" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#191f20"/><stop offset=".22" stop-color="#8f9694"/><stop offset=".42" stop-color="#333a3a"/><stop offset=".68" stop-color="#747b78"/><stop offset="1" stop-color="#171d1d"/></linearGradient>
+    <linearGradient id="ironH" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#7d8480"/><stop offset=".45" stop-color="#2f3636"/><stop offset="1" stop-color="#141919"/></linearGradient>
+    <filter id="drop" x="-20%" y="-20%" width="140%" height="150%"><feDropShadow dx="0" dy="9" stdDeviation="8" flood-color="#183018" flood-opacity=".42"/></filter>
   </defs>
   <g filter="url(#drop)">
-    <!-- Foremost wooden rim of the cart, viewed from the seat -->
-    <path d="M20 205 L74 158 L385 158 L440 205 L420 326 L40 326 Z" fill="url(#sideWood)" stroke="#201914" stroke-width="11" stroke-linejoin="round"/>
-    <path d="M20 205 L74 158 L385 158 L440 205 L230 263 Z" fill="url(#topWood)" stroke="#201914" stroke-width="9" stroke-linejoin="round"/>
-    <path d="M20 205 L230 263 L230 348 L40 326 Z" fill="url(#frontWood)" stroke="#1b1511" stroke-width="10" stroke-linejoin="round"/>
-    <path d="M440 205 L230 263 L230 348 L420 326 Z" fill="url(#sideWood)" stroke="#1b1511" stroke-width="10" stroke-linejoin="round"/>
-    <!-- Wooden slats and grain -->
-    <path d="M56 228 L225 276 M49 260 L225 307 M43 293 L225 336" stroke="#b17b48" stroke-width="5" opacity=".62"/>
-    <path d="M404 228 L235 276 M411 260 L235 307 M417 293 L235 336" stroke="#d19a5d" stroke-width="5" opacity=".43"/>
-    <path d="M90 180 L230 222 L370 180" fill="none" stroke="#c08a50" stroke-width="5" opacity=".45"/>
-    <!-- Iron top rail / corner brackets -->
-    <path d="M20 205 L74 158 L385 158 L440 205" fill="none" stroke="#171c1d" stroke-width="18" stroke-linejoin="round"/>
-    <path d="M23 201 L76 162 L383 162 L437 201" fill="none" stroke="url(#iron)" stroke-width="8" stroke-linejoin="round"/>
-    <path d="M38 212 L55 321 M78 168 L94 244 M422 212 L405 321 M382 168 L366 244" stroke="#202626" stroke-width="13" stroke-linecap="round"/>
-    <path d="M42 214 L58 317 M81 171 L96 241 M418 214 L402 317 M379 171 L364 241" stroke="#8a8e88" stroke-width="3" opacity=".8"/>
+    <!-- Undercarriage: axle and rear wheels seen from behind -->
+    <rect x="120" y="311" width="220" height="10" fill="url(#ironH)" stroke="#1b1511" stroke-width="4"/>
+    <g stroke="#1b1511" stroke-width="6" stroke-linejoin="round">
+      <rect x="96" y="292" width="30" height="48" rx="6" fill="url(#iron)"/>
+      <rect x="334" y="292" width="30" height="48" rx="6" fill="url(#iron)"/>
+      <!-- vertical wheel flanges on the inner side -->
+      <rect x="124" y="292" width="10" height="54" rx="4" fill="url(#iron)"/>
+      <rect x="326" y="292" width="10" height="54" rx="4" fill="url(#iron)"/>
+    </g>
+    <path d="M104 299 L104 325 M356 299 L356 325" stroke="#b8bdb5" stroke-width="2.5" opacity=".55" stroke-linecap="round"/>
+    <!-- Chassis beam under the body -->
+    <path d="M92 284 L368 284 L362 304 L98 304 Z" fill="url(#ironH)" stroke="#1b1511" stroke-width="7" stroke-linejoin="round"/>
+
+    <!-- Rim of the open top: far end, both sides and rear edge -->
+    <path d="M62 150 L108 92 L352 92 L398 150 Z" fill="url(#topWood)" stroke="#201914" stroke-width="9" stroke-linejoin="round"/>
+    <!-- Inside of the cart (dark opening) -->
+    <path d="M86 134 L122 100 L338 100 L374 134 Z" fill="#120b07"/>
+    <path d="M122 100 L338 100 L310 134 L150 134 Z" fill="url(#farWall)"/>
+    <path d="M86 134 L122 100 L150 134 Z" fill="url(#innerL)"/>
+    <path d="M374 134 L338 100 L310 134 Z" fill="url(#innerR)"/>
+    <path d="M136 112 L324 112 M143 123 L317 123" stroke="#a9753f" stroke-width="3" opacity=".28"/>
+    <path d="M104 118 L132 124 M356 118 L328 124" stroke="#a9753f" stroke-width="3" opacity=".22"/>
+    <path d="M86 134 L122 100 L338 100 L374 134" fill="none" stroke="#201914" stroke-width="5" stroke-linejoin="round"/>
+    <!-- Iron cap on far rim and side rims -->
+    <path d="M108 92 L352 92" stroke="#171c1d" stroke-width="12" stroke-linecap="round"/>
+    <path d="M110 91 L350 91" stroke="url(#ironH)" stroke-width="4" stroke-linecap="round" opacity=".85"/>
+    <path d="M62 150 L108 92 M398 150 L352 92" stroke="#171c1d" stroke-width="12" stroke-linecap="round"/>
+    <path d="M65 147 L110 91 M395 147 L350 91" stroke="#8a8e88" stroke-width="3" opacity=".7" stroke-linecap="round"/>
+
+    <!-- Rear panel (faces the viewer) -->
+    <path d="M62 150 L398 150 L372 288 L88 288 Z" fill="url(#rearWood)" stroke="#201914" stroke-width="11" stroke-linejoin="round"/>
+    <!-- Wooden planks and grain -->
+    <path d="M68 185 L392 185 M75 220 L385 220 M82 255 L378 255" stroke="#1d130c" stroke-width="5" opacity=".7"/>
+    <path d="M70 191 L390 191 M77 226 L383 226 M84 261 L376 261" stroke="#c08a50" stroke-width="3" opacity=".35"/>
+    <path d="M160 160 L152 180 M290 195 L300 214 M200 232 L194 250 M262 262 L270 280" stroke="#2a190e" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+    <!-- Iron top rail along the rear edge -->
+    <path d="M62 150 L398 150" stroke="#171c1d" stroke-width="18" stroke-linecap="round"/>
+    <path d="M66 147 L394 147" stroke="url(#ironH)" stroke-width="7" stroke-linecap="round"/>
+    <!-- Iron straps -->
+    <path d="M102 156 L127 280 M358 156 L333 280" stroke="#202626" stroke-width="14" stroke-linecap="round"/>
+    <path d="M99 159 L124 277 M361 159 L336 277" stroke="#8a8e88" stroke-width="3" opacity=".75"/>
+    <!-- Bottom iron band -->
+    <path d="M88 279 L372 279" stroke="#171c1d" stroke-width="14" stroke-linecap="round"/>
+    <path d="M92 276 L368 276" stroke="#8a8e88" stroke-width="3" opacity=".7"/>
+    <!-- Coupling plate and ring -->
+    <rect x="198" y="222" width="64" height="50" rx="6" fill="#262c2c" stroke="#171c1d" stroke-width="6"/>
+    <path d="M204 227 L256 227" stroke="#8a8e88" stroke-width="2.5" opacity=".7" stroke-linecap="round"/>
+    <circle cx="230" cy="250" r="13" fill="#0e1313" stroke="#171c1d" stroke-width="5"/>
+    <circle cx="230" cy="250" r="13" fill="none" stroke="url(#iron)" stroke-width="3"/>
     <!-- Rivets -->
     <g fill="#a6aaa2" stroke="#272d2c" stroke-width="4">
-      <circle cx="75" cy="165" r="7"/><circle cx="385" cy="165" r="7"/>
-      <circle cx="47" cy="232" r="6"/><circle cx="62" cy="295" r="6"/>
-      <circle cx="413" cy="232" r="6"/><circle cx="398" cy="295" r="6"/>
+      <circle cx="75" cy="154" r="6"/><circle cx="385" cy="154" r="6"/>
+      <circle cx="105" cy="172" r="5.5"/><circle cx="114" cy="217" r="5.5"/><circle cx="123" cy="262" r="5.5"/>
+      <circle cx="355" cy="172" r="5.5"/><circle cx="346" cy="217" r="5.5"/><circle cx="337" cy="262" r="5.5"/>
+      <circle cx="98" cy="279" r="5"/><circle cx="362" cy="279" r="5"/>
+      <circle cx="207" cy="231" r="4.5"/><circle cx="253" cy="231" r="4.5"/><circle cx="207" cy="264" r="4.5"/><circle cx="253" cy="264" r="4.5"/>
     </g>
-    <!-- Small worn iron plates -->
-    <path d="M98 184 L126 192 M334 192 L362 184" stroke="#1e2424" stroke-width="9" stroke-linecap="round"/>
-    <path d="M102 182 L125 189 M335 189 L358 182" stroke="#b1b5ac" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
+    <!-- Small worn iron plates on the rail -->
+    <path d="M150 168 L184 168 M276 168 L310 168" stroke="#1e2424" stroke-width="9" stroke-linecap="round"/>
+    <path d="M153 166 L181 166 M279 166 L307 166" stroke="#b1b5ac" stroke-width="2.5" stroke-linecap="round" opacity=".8"/>
   </g>
 </svg>

@@ -19,6 +19,7 @@
         <h1>価値判断AIマッチング <span>（仮称）</span></h1>
       </div>
       <div class="progress-pill" id="progressPill" aria-label="全10問中1問目">QUESTION 1 / 10</div>
+      <button class="options-button" id="optionsButton" type="button">オプション</button>
     </header>
 
     <section class="question-card" aria-labelledby="questionTitle">
@@ -77,6 +78,8 @@
         <span id="sceneStatus">ガタン、ゴトン……トロッコは原っぱを進んでいます</span>
       </div>
 
+      <button class="skip-button" id="skipButton" type="button">演出をスキップ</button>
+
       <div class="choices" id="choices" role="group" aria-label="回答選択">
         <button class="choice choice-left" data-position="left" type="button">
           <span class="choice-arrow" aria-hidden="true">←</span>
@@ -100,6 +103,33 @@
           <p class="result-disclaimer" id="resultDisclaimer">一致率は今回の問題に対する回答の一致割合です。倫理的な優劣を表すものではありません。</p>
           <button class="next-button" type="button" id="nextButton">次の問題へ</button>
           <button class="restart-button" type="button" id="restartButton">診断を最初からやり直す</button>
+          <button class="restart-button" type="button" id="homeButton" hidden>スタート画面に戻る</button>
+        </section>
+      </div>
+
+      <div class="result-overlay" id="startOverlay" aria-hidden="true">
+        <section class="result-panel" role="dialog" aria-modal="true" aria-labelledby="startTitle">
+          <div class="result-kicker">倫理的ジレンマ診断</div>
+          <h2 id="startTitle">価値判断AIマッチング</h2>
+          <p class="start-lead">トロッコに乗って、全10問のジレンマに答えます。最後に、3つのAIと回答がどれだけ重なったかを確認できます。</p>
+          <ul class="start-points">
+            <li>正解・不正解はありません。あなた自身ならどうするかで選んでください。</li>
+            <li>左右の選択肢をクリック、または ← → キーで回答します。</li>
+            <li>AIの回答は動作確認用のモックデータです。</li>
+          </ul>
+          <button class="next-button" type="button" id="startButton">診断をはじめる</button>
+          <button class="restart-button" type="button" id="startRestartButton" hidden>最初からやり直す</button>
+        </section>
+      </div>
+
+      <div class="result-overlay" id="optionsOverlay" aria-hidden="true">
+        <section class="result-panel" role="dialog" aria-modal="true" aria-labelledby="optionsTitle">
+          <h2 id="optionsTitle">オプション</h2>
+          <label class="option-row">
+            <span><strong>演出をスキップ</strong><small>回答後のトロッコの演出を省略して、すぐに結果を表示します。設定はこのブラウザに保存されます。</small></span>
+            <input type="checkbox" id="skipToggle" role="switch" />
+          </label>
+          <button class="next-button" type="button" id="optionsClose">閉じる</button>
         </section>
       </div>
     </section>

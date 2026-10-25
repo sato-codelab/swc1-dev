@@ -12,10 +12,11 @@
 
   function create(doc) {
     const $ = (id) => doc.getElementById(id);
-    const scene = $('scene'), world = $('worldLayer'), stage = $('trolleyStage'), impact = $('impactEffect'), status = $('sceneStatus');
+    const scene = $('scene'), stage = $('trolleyStage'), impact = $('impactEffect'), status = $('sceneStatus');
     const sparks = { left: $('sparkLeft'), right: $('sparkRight') };
     const targets = { left: $('targetLeft'), right: $('targetRight') };
     let timers = [];
+    let pendingDone = null;
 
     const later = (fn, ms) => timers.push(setTimeout(fn, ms));
     const cancel = () => { timers.forEach(clearTimeout); timers = []; };
@@ -38,8 +39,23 @@
       sparks.right.classList.remove('animate-sparks');
     }
 
+    function finish() {
+      scene.classList.remove('is-playing');
+      const fn = pendingDone; pendingDone = null;
+      if (fn) fn();
+    }
+
     return {
       cancel,
+      /** Ends a running choice animation immediately and shows the result. */
+      skip() {
+        if (!pendingDone) return;
+        cancel();
+        scene.classList.add('is-skipping');
+        calm();
+        status.textContent = TEXT.settled;
+        finish();
+      },
       setTheme(theme) {
         [...scene.classList].filter((c) => c.startsWith('question-type-')).forEach((c) => scene.classList.remove(c));
         scene.classList.add(`question-type-${theme || 'neutral'}`);
@@ -50,24 +66,24 @@
       },
       reset() {
         cancel();
+        pendingDone = null;
+        scene.classList.remove('is-playing', 'is-skipping');
         calm();
         scene.classList.add('is-running');
         status.textContent = TEXT.idle;
       },
       /** Plays the choice animation; calls onDone when the result may be shown. */
-      playChoice(position, onDone) {
-        // Zoom toward the centre of the chosen target (focus of expansion) while sliding it toward the cart.
-        const t = targets[position];
-        const ox = t.offsetLeft + t.offsetWidth / 2, oy = t.offsetTop + t.offsetHeight / 2;
-        world.style.transformOrigin = `${ox}px ${oy}px`;
-        world.style.setProperty('--shift', `${(world.offsetWidth / 2 - ox) * 0.85}px`);
-        scene.classList.add(position === 'left' ? 'is-choice-left' : 'is-choice-right', 'is-sprinting');
+      playChoice(position, onDone, { instant = false } = {}) {
+        pendingDone = onDone;
+        if (instant) { later(finish, 200); return; }
+        // CSS slides the chosen figure to the track centre and zooms around the centre line, so the rails stay under the wheels.
+        scene.classList.add('is-playing', position === 'left' ? 'is-choice-left' : 'is-choice-right', 'is-sprinting');
         stage.classList.add(position === 'left' ? 'tilt-left' : 'tilt-right');
         retrigger(sparks[position], 'animate-sparks');
         status.textContent = TEXT.sprint;
         later(() => { scene.classList.add('is-impact'); retrigger(impact, 'active'); status.textContent = TEXT.impact; }, TIMINGS.impact);
         later(() => { calm(); status.textContent = TEXT.settled; }, TIMINGS.settle);
-        later(onDone, TIMINGS.done);
+        later(finish, TIMINGS.done);
       },
     };
   }
