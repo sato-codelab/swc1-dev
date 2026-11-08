@@ -1,164 +1,158 @@
-/* DOM rendering + user input events. Receives view-models, emits plain events. No domain logic. */
+/* DOM + focus management. No scoring, persistence, or model-data interpretation. */
 (function (root) {
   'use strict';
-
   function create(doc) {
-    const $ = (id) => doc.getElementById(id);
-    const el = {
-      progress: $('progressPill'), number: $('questionNumber'), title: $('questionTitle'),
-      body: $('questionBody'), note: $('questionNote'),
-      overlay: $('resultOverlay'), kicker: $('resultKicker'), resultTitle: $('resultTitle'),
-      selected: $('resultSelected'), cmpTitle: $('comparisonTitle'), cmpNote: $('comparisonNote'),
-      list: $('comparisonList'), disclaimer: $('resultDisclaimer'), next: $('nextButton'), restart: $('restartButton'), home: $('homeButton'),
-      start: $('startOverlay'), startBtn: $('startButton'), startRestart: $('startRestartButton'),
-      profile: $('profileOverlay'), profileLead: $('profileLead'), profileAxes: $('profileAxes'), profileCommon: $('profileCommon'), profileDifference: $('profileDifference'), profileEvidence: $('profileEvidence'), profileNote: $('profileNote'), profileRestart: $('profileRestart'), profileHome: $('profileHome'),
-      options: $('optionsOverlay'), optionsBtn: $('optionsButton'), optionsClose: $('optionsClose'), skipToggle: $('skipToggle'), skip: $('skipButton'),
-    };
-    const buttons = { left: doc.querySelector('.choice-left'), right: doc.querySelector('.choice-right') };
-    const side = { left: '左', right: '右' };
-    const arrow = { left: '←', right: '→' };
+    const $ = id => doc.getElementById(id);
+    const buttons = {left:doc.querySelector('.choice-left'),right:doc.querySelector('.choice-right')};
     const overlays = [...doc.querySelectorAll('.result-overlay')];
-    let onChoose = () => {};
-    let lastFocus = null;
-    overlays.forEach(o => { o.inert = true; });
-
-    const anyOpen = () => overlays.some((o) => o.classList.contains('is-visible'));
-    const setOverlay = (o, on) => { o.classList.toggle('is-visible', on); o.setAttribute('aria-hidden', String(!on)); o.inert = !on; doc.querySelector('.choices').inert = on || overlays.some(layer => layer !== o && layer.classList.contains('is-visible')); };
-
-    function renderChoice(position, vm) {
-      const b = buttons[position];
-      b.dataset.optionId = vm.optionId;
-      b.dataset.position = position;
-      b.disabled = false;
-      b.classList.remove('is-selected');
-      b.setAttribute('aria-pressed', 'false');
-      b.setAttribute('aria-label', `画面${side[position]}側、選択肢${vm.code}：${vm.text}`);
-      b.querySelector('.choice-arrow').textContent = arrow[position];
-      b.querySelector('.choice-copy strong').textContent = vm.text;
-      b.querySelector('.choice-copy small').textContent = `選択肢 ${vm.code}`;
+    const activeOverlay = () => $('optionsOverlay').classList.contains('is-visible') ? $('optionsOverlay') : overlays.find(o => o.classList.contains('is-visible'));
+    const visibleFocusables = element => [...element.querySelectorAll('button:not(:disabled), input, select, summary, [tabindex="0"]')].filter(n => n.getClientRects().length && !n.closest('[hidden]'));
+    let onChoose = () => {}, onModelSelect = () => {}, optionsFocus = null;
+    const node = (tag,cls,text) => { const n = doc.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
+    const append = (parent,tag,cls,text) => { const n = node(tag,cls,text); parent.append(n); return n; };
+    function syncModal() {
+      const top = activeOverlay();
+      $('appMain').inert = Boolean(top);
+      doc.body.classList.toggle('modal-open',Boolean(top));
+      overlays.forEach(o => { o.inert = o !== top; o.setAttribute('aria-hidden',String(o !== top)); });
     }
-
-    function row(r, isSummary) {
-      const div = doc.createElement('div');
-      div.className = `comparison-row${isSummary ? ' comparison-row-summary' : ''}${r.top ? ' is-top' : ''}`;
-      const meta = doc.createElement('div');
-      const add = (parent, cls, text) => { const n = doc.createElement('div'); n.className = cls; n.textContent = text; parent.append(n); return n; };
-      const name = add(meta, 'ai-name', r.name);
-      if (r.badge) { const b = doc.createElement('span'); b.className = 'ai-badge'; b.textContent = r.badge; name.append(b); }
-      add(meta, 'ai-answer', r.answer);
-      if (r.detail) add(meta, 'ai-detail', r.detail);
-      const rate = r.rate == null ? 0 : r.rate;
-      const bar = doc.createElement('div');
-      bar.className = 'match-bar';
-      bar.innerHTML = '<span></span>';
-      bar.firstChild.style.width = `${rate}%`;
-      meta.append(bar);
-      div.append(meta);
-      add(div, 'ai-match', r.rate == null ? '—' : `${r.rate}%`);
-      return div;
-    }
-
-    function openOptions(settings) {
-      lastFocus = doc.activeElement;
-      el.skipToggle.checked = settings.skipAnimation;
-      setOverlay(el.options, true);
-      el.skipToggle.focus({ preventScroll: true });
-    }
+    function setOverlay(o,on) { o.classList.toggle('is-visible',on); syncModal(); }
+    function focusHeading() { $('questionTitle').focus({preventScroll:true}); $('questionTitle').scrollIntoView({block:'start'}); }
     function closeOptions() {
-      setOverlay(el.options, false);
-      if (lastFocus && lastFocus.focus) lastFocus.focus({ preventScroll: true });
+      setOverlay($('optionsOverlay'),false);
+      if (optionsFocus && optionsFocus.isConnected && !optionsFocus.closest('[inert]')) optionsFocus.focus({preventScroll:true});
+      else if (activeOverlay()) activeOverlay().querySelector('.result-panel').focus({preventScroll:true});
     }
-
-    Object.entries(buttons).forEach(([position, b]) => {
-      b.addEventListener('click', () => onChoose({ optionId: b.dataset.optionId, position }));
-    });
-    el.optionsClose.addEventListener('click', closeOptions);
-    doc.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && el.options.classList.contains('is-visible')) { closeOptions(); return; }
+    function row(r) {
+      const item = node('div',`comparison-row${r.top ? ' is-top' : ''}`);
+      const meta = append(item,'div'); const title = append(meta,'div','ai-name',r.name);
+      if (r.badge) append(title,'span','ai-badge',r.badge);
+      append(meta,'div','ai-answer',r.answer); append(meta,'div','ai-detail',r.detail);
+      const bar = append(meta,'div','match-bar'); bar.setAttribute('aria-hidden','true');
+      append(bar,'span').style.width = `${r.rate == null ? 0 : r.rate}%`;
+      append(item,'div','ai-match',r.rate == null ? '未比較' : `${r.rate}%`);
+      return item;
+    }
+    function evidenceCard(e) {
+      const card = node('article','evidence-card');
+      append(card,'h4','',`${e.id} ${e.title}`);
+      append(card,'p','evidence-body',e.body);
+      e.options.forEach(o => append(card,'p','evidence-option',o));
+      append(card,'p','evidence-mine',`あなた：${e.mine}`);
+      append(card,'p','',`${e.modelName}：${e.counts}`);
+      append(card,'p','',`代表回答：${e.representative}`);
+      append(card,'p','',`あなたの選択と一致する有効回答の割合：${e.agreement}`);
+      if (e.reason) append(card,'p','',`保存された選択後の説明：${e.reason}`);
+      return card;
+    }
+    function detail(parent,title) { const d = append(parent,'details','profile-details'); append(d,'summary','',title); return d; }
+    function renderProfile(vm) {
+      const host = $('profileSection'); host.replaceChildren(); host.hidden = !vm;
+      if (!vm) return;
+      const head = append(host,'div','profile-heading');
+      append(head,'h3','','6つの観点から振り返る');
+      const label = append(head,'label','model-picker','比較するAI '); label.htmlFor = 'profileModel';
+      const select = append(label,'select'); select.id = 'profileModel';
+      vm.models.forEach(m => { const o = append(select,'option','',m.name); o.value = m.id; }); select.value = vm.selectedModelId;
+      select.addEventListener('change',() => onModelSelect(select.value));
+      append(host,'p','profile-guide','あなたの回答と、AIのA/B選択率から計算した値を並べます。高いほど優れているという意味ではありません。');
+      const grid = append(host,'div','profile-grid');
+      vm.axes.forEach(axis => {
+        const card = append(grid,'article','axis-card');
+        append(card,'h4','',axis.name); append(card,'p','axis-note',axis.note);
+        [['あなた',axis.mine,'mine'],[vm.modelName,axis.ai,'model']].forEach(([name,value,type]) => {
+          const group = append(card,'div',`axis-series axis-${type}`);
+          append(group,'span','axis-label',name); append(group,'strong','axis-value',value == null ? '未算出' : String(value));
+          const track = append(group,'div','axis-track'); track.setAttribute('aria-hidden','true');
+          append(track,'span').style.width = `${value == null ? 0 : value}%`;
+        });
+        append(card,'p','axis-source',axis.ids.join('・'));
+      });
+      append(host,'p','profile-guide','「本人の意思への反応」「関係性への反応」の50は、2場面で判断の変化がなかったことを示します。AIでは各場面のA選択率の差であり、同じ個体が考えを変えた割合ではありません。');
+      const narrative = append(host,'section','profile-narrative'); append(narrative,'h3','','今回の回答から');
+      append(narrative,'p','',vm.narrative.common); append(narrative,'p','',vm.narrative.difference);
+      const explanation = detail(narrative,'このプロフィール文の根拠を見る');
+      vm.evidence.filter(e => vm.narrative.evidenceIds.includes(e.id)).forEach(e => explanation.append(evidenceCard(e)));
+      vm.pairs.forEach(pair => {
+        const section = append(host,'section','pair-note'); append(section,'h4','',`${pair.title}（${pair.ids.join('・')}）`); append(section,'p','',pair.text);
+      });
+      const all = detail(host,'全10問の回答とAIの回数を見る');
+      vm.evidence.forEach(e => all.append(evidenceCard(e)));
+      const method = detail(host,'数値の計算方法・データの条件');
+      append(method,'p','','選択一致度は、各問であなたが選んだ内容をAIが選んだ割合の10問平均です。表示は整数に丸め、最も近いAIの判定には丸め前の値を使います。小さな差は決定的な相性差を示しません。');
+      append(method,'p','','AIの割合は有効回答内の割合です。代表回答は多数側を採用し、同数ならA/B拮抗として片側を選びません。全10問の有効回答がそろわないモデルは総合順位の対象外です。');
+      append(method,'p','','以下では、原稿のAを選ぶとa=1、Bを選ぶとa=0です。AIにはAの選択率を代入します。6軸は独立した性格因子ではなく、総合点や平均点は作りません。');
+      const list = append(method,'ul','formula-list'); vm.axes.forEach(a => append(list,'li','',`${a.name}：${a.formula}`));
+      append(method,'p','',vm.metadata); append(method,'p','',vm.collectionMethod);
+    }
+    function renderResult(vm) {
+      $('resultKicker').textContent = vm.kicker; $('resultTitle').textContent = vm.title; $('resultSelected').textContent = vm.selected;
+      $('comparisonTitle').textContent = vm.comparisonTitle; $('comparisonNote').textContent = vm.comparisonNote;
+      $('comparisonList').replaceChildren(...vm.rows.map(row)); $('comparisonSection').hidden = !vm.rows.length;
+      $('dataNotice').hidden = !vm.profile; $('dataNotice').textContent = vm.profile ? vm.profile.source : '';
+      renderProfile(vm.profile);
+      $('resultDisclaimer').textContent = vm.disclaimer;
+      $('nextButton').hidden = vm.primaryLabel == null; $('nextButton').textContent = vm.primaryLabel || '';
+      $('restartButton').textContent = vm.restartLabel; $('homeButton').hidden = !vm.isSummary;
+      $('resultOverlay').classList.toggle('is-summary',vm.isSummary);
+    }
+    Object.entries(buttons).forEach(([position,b]) => b.addEventListener('click',() => {
+      if (!activeOverlay() && !b.disabled) onChoose({optionId:b.dataset.optionId,position});
+    }));
+    $('optionsClose').addEventListener('click',closeOptions);
+    doc.addEventListener('keydown',e => {
+      const top = activeOverlay();
+      if (e.key === 'Escape' && top === $('optionsOverlay')) { e.preventDefault(); closeOptions(); return; }
+      if (e.key === 'Tab' && top) {
+        const focusable = visibleFocusables(top), first = focusable[0], last = focusable[focusable.length-1];
+        if (!first) { e.preventDefault(); top.querySelector('.result-panel').focus(); return; }
+        if (e.shiftKey && (doc.activeElement === first || !focusable.includes(doc.activeElement))) { e.preventDefault(); last.focus(); }
+        else if (!e.shiftKey && (doc.activeElement === last || !focusable.includes(doc.activeElement))) { e.preventDefault(); first.focus(); }
+        return;
+      }
       const position = e.key === 'ArrowLeft' ? 'left' : e.key === 'ArrowRight' ? 'right' : null;
-      if (!position || e.repeat || e.altKey || e.ctrlKey || e.metaKey) return;
-      if (anyOpen() || buttons[position].disabled) return;
-      buttons[position].click();
+      if (!position || top || e.repeat || e.altKey || e.ctrlKey || e.metaKey || buttons[position].disabled || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return;
+      e.preventDefault(); buttons[position].click();
     });
-
+    syncModal();
+    const bind = (id,fn) => $(id).addEventListener('click',fn);
     return {
-      onChoose(fn) { onChoose = fn; },
-      onNext(fn) { el.next.addEventListener('click', fn); },
-      onRestart(fn) { el.restart.addEventListener('click', fn); el.profileRestart.addEventListener('click', () => { setOverlay(el.profile, false); fn(); }); },
-      onHome(fn) { el.home.addEventListener('click', fn); el.profileHome.addEventListener('click', () => { setOverlay(el.profile, false); fn(); }); },
-      onStart(fn) { el.startBtn.addEventListener('click', fn); },
-      onStartRestart(fn) { el.startRestart.addEventListener('click', fn); },
-      onSkip(fn) { el.skip.addEventListener('click', fn); },
-      /** fn(checked) is called when the skip-animation switch changes; getSettings() supplies the current values. */
-      bindOptions(getSettings, fn) {
-        el.optionsBtn.addEventListener('click', () => openOptions(getSettings()));
-        el.skipToggle.addEventListener('change', () => fn(el.skipToggle.checked));
+      onChoose(fn) { onChoose = fn; }, onModelSelect(fn) { onModelSelect = fn; },
+      onNext(fn) { bind('nextButton',fn); }, onRestart(fn) { bind('restartButton',fn); }, onHome(fn) { bind('homeButton',fn); },
+      onStart(fn) { bind('startButton',fn); }, onStartRestart(fn) { bind('startRestartButton',fn); }, onSkip(fn) { bind('skipButton',fn); },
+      bindOptions(getSettings,fn) {
+        [$('optionsButton'), ...doc.querySelectorAll('[data-open-options]')].forEach(button => button.addEventListener('click',() => {
+          optionsFocus = doc.activeElement; $('skipToggle').checked = getSettings().skipAnimation;
+          setOverlay($('optionsOverlay'),true); $('skipToggle').focus({preventScroll:true});
+        }));
+        $('skipToggle').addEventListener('change',() => fn($('skipToggle').checked));
       },
-
-      renderQuestion(vm) {
-        el.progress.textContent = vm.progress;
-        el.progress.setAttribute('aria-label', vm.progressLabel);
-        el.number.textContent = vm.number;
-        el.title.textContent = vm.title;
-        el.body.textContent = vm.body;
-        el.note.textContent = vm.note;
+      setInstructions(text) { $('startInstructions').textContent = text; $('commonInstructions').textContent = text; },
+      renderQuestion(vm,{focus = false} = {}) {
+        $('progressPill').textContent = vm.progress; $('progressPill').setAttribute('aria-label',vm.progressLabel);
+        $('questionNumber').textContent = vm.number; $('questionTitle').textContent = vm.title; $('questionBody').textContent = vm.body; $('questionNote').textContent = vm.note;
+        if (focus) focusHeading();
       },
-      renderChoices({ left, right }) { renderChoice('left', left); renderChoice('right', right); },
-      lockChoices(selectedOptionId) {
-        Object.values(buttons).forEach((b) => {
-          const on = b.dataset.optionId === selectedOptionId;
-          b.disabled = true;
-          b.classList.toggle('is-selected', on);
-          b.setAttribute('aria-pressed', String(on));
+      renderChoices(choices) {
+        Object.entries(buttons).forEach(([position,b]) => {
+          const vm = choices[position]; b.dataset.optionId = vm.optionId; b.disabled = false; b.classList.remove('is-selected'); b.setAttribute('aria-pressed','false');
+          b.setAttribute('aria-label',`画面${position === 'left' ? '左' : '右'}側、選択肢${vm.code}：${vm.text}`);
+          b.querySelector('.choice-copy strong').textContent = vm.text; b.querySelector('.choice-copy small').textContent = `選択肢 ${vm.code}`;
         });
       },
-
+      lockChoices(optionId) { Object.values(buttons).forEach(b => { b.disabled = true; b.classList.toggle('is-selected',b.dataset.optionId === optionId); b.setAttribute('aria-pressed',String(b.dataset.optionId === optionId)); }); },
       showStart(vm) {
-        doc.body.classList.add('is-start');
-        el.startBtn.textContent = vm.primaryLabel;
-        el.startRestart.hidden = !vm.canRestart;
-        setOverlay(el.start, true);
-        el.startBtn.focus({ preventScroll: true });
+        doc.body.classList.add('is-start'); $('startButton').textContent = vm.primaryLabel; $('startRestartButton').hidden = !vm.canRestart;
+        $('restoreNotice').hidden = !vm.notice; $('restoreNotice').textContent = vm.notice || '';
+        setOverlay($('startOverlay'),true); $('startOverlay').querySelector('.result-panel').scrollTop = 0;
+        $('startTitle').setAttribute('tabindex','-1'); $('startTitle').focus({preventScroll:true});
       },
-      hideStart() { doc.body.classList.remove('is-start'); setOverlay(el.start, false); },
-
-      isSummaryVisible() { return el.overlay.classList.contains('is-visible') && el.overlay.dataset.mode === 'summary'; },
-      showProfile(vm) {
-        if (!vm) return;
-        setOverlay(el.overlay, false);
-        el.profileLead.textContent = vm.lead;
-        el.profileCommon.textContent = vm.common;
-        el.profileDifference.textContent = vm.difference;
-        el.profileNote.textContent = vm.note;
-        el.profileAxes.replaceChildren(...vm.axes.map(a => {
-          const section=doc.createElement('section'); section.className='profile-axis';
-          const label=doc.createElement('div'); label.className='profile-axis-head'; label.textContent=a.name;
-          const note=doc.createElement('small'); note.textContent=a.note;
-          const bar=(name,value,cls)=>{const line=doc.createElement('div');line.className='profile-bar-line';const text=doc.createElement('span');text.textContent=`${name} ${value==null?'—':Math.round(value)+'%'}`;const track=doc.createElement('div');track.className='profile-bar';const fill=doc.createElement('i');fill.className=cls;fill.style.width=`${value??0}%`;track.append(fill);line.append(text,track);return line;};
-          section.append(label,note,bar('あなた',a.mine,'profile-me'),bar('AI',a.ai,'profile-ai')); return section;
-        }));
-        el.profileEvidence.replaceChildren(...vm.evidence.map(r => { const row=doc.createElement('p');row.textContent=`${r.id} ${r.title}：あなた ${r.user} ／ ${vm.nearest} ${r.model}`;return row;}));
-        setOverlay(el.profile,true); el.profileRestart.focus({preventScroll:true});
-      },
-      showResult(vm) {
-        el.overlay.dataset.mode = vm.isSummary ? 'summary' : 'question';
-        el.kicker.textContent = vm.kicker;
-        el.resultTitle.textContent = vm.title;
-        el.selected.textContent = vm.selected;
-        el.cmpTitle.textContent = vm.comparisonTitle;
-        el.cmpNote.textContent = vm.comparisonNote;
-        el.list.replaceChildren(...vm.rows.map((r) => row(r, vm.isSummary)));
-        el.disclaimer.textContent = vm.disclaimer;
-        el.next.hidden = vm.primaryLabel == null;
-        if (vm.primaryLabel != null) el.next.textContent = vm.primaryLabel;
-        el.restart.textContent = vm.restartLabel;
-        el.home.hidden = !vm.isSummary;
-        setOverlay(el.overlay, true);
-        (el.next.hidden ? el.restart : el.next).focus({ preventScroll: true });
-      },
-      hideResult() { setOverlay(el.overlay, false); },
+      hideStart() { doc.body.classList.remove('is-start'); setOverlay($('startOverlay'),false); },
+      showResult(vm) { renderResult(vm); setOverlay($('resultOverlay'),true); $('resultOverlay').querySelector('.result-panel').scrollTop = 0; $('resultTitle').focus({preventScroll:true}); },
+      updateSummary(vm) { const panel = $('resultOverlay').querySelector('.result-panel'), scroll = panel.scrollTop; renderResult(vm); panel.scrollTop = scroll; $('profileModel').focus({preventScroll:true}); },
+      hideResult() { setOverlay($('resultOverlay'),false); },
+      focusQuestion:focusHeading,
     };
   }
-
   root.AppView = { create };
 })(window);

@@ -17,9 +17,16 @@
     const targets = { left: $('targetLeft'), right: $('targetRight') };
     let timers = [];
     let pendingDone = null;
+    let generation = 0;
 
-    const later = (fn, ms) => timers.push(setTimeout(fn, ms));
-    const cancel = () => { timers.forEach(clearTimeout); timers = []; };
+    const later = (fn, ms) => {
+      const token = generation;
+      timers.push(setTimeout(() => { if (token === generation) fn(); }, ms));
+    };
+    const cancel = () => {
+      generation += 1; timers.forEach(clearTimeout); timers = []; pendingDone = null;
+      scene.classList.remove('is-playing');
+    };
     const retrigger = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
 
     ['left', 'right'].forEach((dir) => {
@@ -50,7 +57,9 @@
       /** Ends a running choice animation immediately and shows the result. */
       skip() {
         if (!pendingDone) return;
+        const done = pendingDone;
         cancel();
+        pendingDone = done;
         scene.classList.add('is-skipping');
         calm();
         status.textContent = TEXT.settled;
@@ -60,7 +69,7 @@
         [...scene.classList].filter((c) => c.startsWith('question-type-')).forEach((c) => scene.classList.remove(c));
         scene.classList.add(`question-type-${theme || 'neutral'}`);
       },
-      /** labels: { left: 'A', right: 'B' } – badge text shown on each collision target */
+      /** labels: { left: 'A', right: 'B' } – badge text shown on each abstract choice marker */
       setTargets(labels) {
         Object.entries(targets).forEach(([pos, t]) => { t.querySelector('.target-badge').textContent = labels[pos] || ''; });
       },
@@ -74,8 +83,11 @@
       },
       /** Plays the choice animation; calls onDone when the result may be shown. */
       playChoice(position, onDone, { instant = false } = {}) {
+        cancel();
+        calm();
         pendingDone = onDone;
-        if (instant) { later(finish, 200); return; }
+        scene.classList.add('is-playing');
+        if (instant) { scene.classList.add('is-skipping'); later(finish, 200); return; }
         // CSS slides the chosen figure to the track centre and zooms around the centre line, so the rails stay under the wheels.
         scene.classList.add('is-playing', position === 'left' ? 'is-choice-left' : 'is-choice-right', 'is-sprinting');
         stage.classList.add(position === 'left' ? 'tilt-left' : 'tilt-right');

@@ -1,64 +1,50 @@
-/* Controller: wires store (state) -> presenter (view-models) -> view/scene (DOM). */
+/* Diagnosis controller. Future spectator controller owns a separate state/session. */
 (function () {
   'use strict';
-
-  const core = window.AppCore;
-  const models = core.MOCK_AI_MODELS;
-  const store = AppStore.create({ core, adapter: AppStore.localStorageAdapter('value-judgment-ai-matching-week2-v1') });
-  const settings = AppStore.createSettings(AppStore.localStorageAdapter('value-judgment-ai-matching-settings-v1'));
-  const view = AppView.create(document);
-  const scene = AppScene.create(document);
-  let locked = false;
-
-  function shuffle(list, rng = Math.random) {
-    const a = [...list];
-    for (let i = a.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(rng() * (i + 1));
-      [a[i], a[j]] = [a[j], a[i]];
-    }
-    return a;
+  const core = AppCore, modelData = AppModels, profiles = AppProfile;
+  const store = AppStore.create({core,adapter:AppStore.localStorageAdapter(AppStore.KEYS.diagnosis)});
+  const settings = AppStore.createSettings(AppStore.localStorageAdapter(AppStore.KEYS.settings));
+  const view = AppView.create(document), scene = AppScene.create(document);
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  let phase = 'start', generation = 0, selectedModelId = null;
+  function transition(next) { generation++; scene.reset(); phase = next; }
+  function renderQuestion(focus = false) {
+    const q = store.question(), placement = store.placement(q.id);
+    scene.setTheme(q.sceneTheme); view.renderQuestion(AppPresenter.question(q,store.index,store.total),{focus});
+    const left = core.findOption(q,placement.left), right = core.findOption(q,placement.right);
+    view.renderChoices({left:AppPresenter.choice(left),right:AppPresenter.choice(right)});
+    scene.setTargets({left:left.code,right:right.code});
   }
-
-  function showQuestion() {
-    locked = false;
-    const q = store.question();
-    scene.reset();
-    scene.setTheme(q.sceneTheme);
-    view.hideResult();
-    view.renderQuestion(AppPresenter.question(q, store.index, store.total));
-    const [left, right] = shuffle(q.options);
-    view.renderChoices({ left: AppPresenter.choice(left), right: AppPresenter.choice(right) });
-    scene.setTargets({ left: left.code, right: right.code });
-  }
-
+  function showQuestion() { transition('question'); view.hideResult(); view.hideStart(); renderQuestion(true); }
   function showStart() {
-    view.showStart(AppPresenter.start({ answered: Object.keys(store.answers).length, total: store.total, nextIndex: store.index }));
+    transition('start'); view.hideResult(); renderQuestion();
+    view.showStart(AppPresenter.start({answered:Object.keys(store.answers).length,total:store.total,nextIndex:store.index,completed:store.isComplete(),
+      notice:store.restoreNotice || (!store.storageAvailable ? 'このブラウザでは保存できません。再読み込みすると回答が失われます。' : '')}));
   }
-
-  function showQuestionResult() {
-    const q = store.question();
-    view.showResult(AppPresenter.questionResult({ core, question: q, answer: store.answers[q.id], models, isLast: store.isLast() }));
-  }
-
-  function showSummary() {
-    view.showResult(AppPresenter.summary({ core, answers: store.answers, models }));
-  }
-
-  view.onStart(() => view.hideStart());
-  view.onStartRestart(() => { store.reset(); showQuestion(); view.hideStart(); });
-  view.onChoose(({ optionId, position }) => {
-    if (locked || !store.answer(optionId, position)) return;
-    locked = true;
+  function summaryVM() { return AppPresenter.summary({core,profiles,modelData,answers:store.answers,models:modelData.MOCK_AI_MODELS,selectedModelId}); }
+  function showSummary() { transition('summary'); view.hideStart(); view.showResult(summaryVM()); }
+  function restart() { store.reset(); selectedModelId = null; showQuestion(); }
+  view.setInstructions(core.COMMON_INSTRUCTIONS);
+  view.onStart(() => { if (store.isComplete()) showSummary(); else showQuestion(); });
+  view.onStartRestart(restart);
+  view.onChoose(({optionId,position}) => {
+    if (phase !== 'question') return;
+    const answer = store.answer(optionId,position); if (!answer) return;
+    phase = 'animating'; const token = generation;
     view.lockChoices(optionId);
-    scene.playChoice(position, showQuestionResult, { instant: settings.skipAnimation });
+    scene.playChoice(position,() => {
+      if (generation !== token || phase !== 'animating') return;
+      phase = 'confirmation';
+      view.showResult(AppPresenter.questionResult({core,question:store.question(),answer,isLast:store.isLast(),storageAvailable:store.storageAvailable}));
+    },{instant:settings.skipAnimation || reducedMotion.matches});
   });
-  view.onSkip(() => scene.skip());
-  view.onNext(() => { if (view.isSummaryVisible()) { view.showProfile(AppPresenter.profile({core, answers: store.answers, models})); } else if (store.advance()) showQuestion(); else showSummary(); });
-  view.onRestart(() => { store.reset(); showQuestion(); });
-  view.onHome(() => { store.reset(); showQuestion(); showStart(); });
-  view.bindOptions(() => ({ skipAnimation: settings.skipAnimation }), (on) => settings.set('skipAnimation', on));
-
-  const completed = store.restore();
-  showQuestion();
+  view.onSkip(() => { if (phase === 'animating') scene.skip(); });
+  view.onNext(() => { if (phase !== 'confirmation') return; if (store.advance()) showQuestion(); else if (store.isComplete()) showSummary(); });
+  view.onRestart(restart);
+  // Returning home is navigation, not deletion; explicit restart resets the diagnosis.
+  view.onHome(showStart);
+  view.onModelSelect(id => { if (phase !== 'summary') return; selectedModelId = id; view.updateSummary(summaryVM()); });
+  view.bindOptions(() => ({skipAnimation:settings.skipAnimation}),on => settings.set('skipAnimation',on));
+  const completed = store.restore(); renderQuestion();
   if (completed) showSummary(); else showStart();
 })();
