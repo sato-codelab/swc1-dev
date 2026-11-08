@@ -15,7 +15,7 @@
       number: `${q.id}｜倫理的ジレンマ`,
       title: q.title,
       body: q.body,
-      note: '正解・不正解はありません。あなた自身ならどちらを選ぶか答えてください。',
+      note: '正解・不正解はありません。現場の判断者はどちらを選ぶべきか、あなたの考えで答えてください。',
     };
   }
 
@@ -76,11 +76,36 @@
       comparisonNote: `今回の${ids.length}問の集計`,
       rows,
       disclaimer: `この一致率は、今回実装した${ids.length}問の回答パターンの類似度です。価値観全般の一致率や、AI・利用者の倫理的な優劣を示しません。問題セットは心理学的に検証済みの診断尺度ではありません。`,
-      primaryLabel: null,
+      primaryLabel: '価値観プロフィールを見る',
       restartLabel: 'もう一度診断する',
       isSummary: true,
     };
   }
 
-  root.AppPresenter = { question, choice, questionResult, start, summary };
+  function profile({ core, answers, models }) {
+    const ids = core.QUESTIONS.map(q => q.id);
+    const mine = Object.fromEntries(ids.map(id => [id, answers[id]?.selected_option_id]));
+    const myScores = core.valueProfile(mine);
+    if (!myScores) return null;
+    const ranked = models.map(model => ({ model, stats: core.calculateMatchStats(mine, model.answers, ids) }))
+      .filter(r => r.stats.compared === ids.length).sort((a,b) => b.stats.rate-a.stats.rate);
+    const best = ranked[0] || null;
+    const ties = best ? ranked.filter(r => r.stats.rate === best.stats.rate).map(r => r.model.name) : [];
+    const other = best ? core.valueProfile(best.model.answers) : null;
+    const axes = core.PROFILE_AXES.map(axis => ({ ...axis, mine: myScores[axis.key], ai: other ? other[axis.key] : null }));
+    const common = best && ids.filter(id => best.model.answers[id] === mine[id]);
+    const different = best && ids.filter(id => best.model.answers[id] !== mine[id]);
+    const fmt = id => `${id}（あなた：${core.toCode(core.QUESTIONS.find(q=>q.id===id),mine[id])}／${best.model.name}：${core.toCode(core.QUESTIONS.find(q=>q.id===id),best.model.answers[id])}）`;
+    return {
+      title: 'あなたとAIの価値観プロフィール',
+      lead: best ? `全10問で最も回答が近かったのは ${ties.join('・')}（一致率 ${best.stats.rate}%）です。` : '比較可能なモデル回答がありません。',
+      nearest: best?.model.name || null, axes,
+      common: common?.length ? `今回の回答が一致した例：${fmt(common[0])}` : '今回の10問では一致する回答がありませんでした。',
+      difference: different?.length ? `判断が異なった例：${fmt(different[0])}` : '今回の10問では回答の違いは見られませんでした。',
+      evidence: best ? ids.map(id => ({ id, title: core.QUESTIONS.find(q=>q.id===id).title, user: core.toCode(core.QUESTIONS.find(q=>q.id===id),mine[id]), model: core.toCode(core.QUESTIONS.find(q=>q.id===id),best.model.answers[id]) })) : [],
+      note: 'AI A/B/Cの回答は架空のモックであり、実際のLLMの測定結果ではありません。各軸はこの10問の回答から作った記述的指標です。性格・道徳性の優劣を表さず、研究で検証済みの尺度でもありません。50は軸により意味が異なります。',
+    };
+  }
+
+  root.AppPresenter = { question, choice, questionResult, start, summary, profile };
 })(window);

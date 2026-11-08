@@ -4,154 +4,55 @@
   if (typeof module === 'object' && module.exports) module.exports = core;
   else root.AppCore = core;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
-  const QUESTION_VERSION = '1.2';
+  const QUESTION_VERSION = '2.0';
 
   const QUESTIONS = [
-    {
-      id: 'Q01', version: QUESTION_VERSION, sceneTheme: 'trolley',
-      title: '5人を救うために進路を変えるか',
-      body: 'あなたは走行中のトロッコに乗っています。\n\n前方の線路には5人がいます。このまま進むと、5人に衝突します。\n\n目の前のレバーを倒すと別の線路へ進みますが、その線路には1人がいます。\n\nほかにトロッコを止める方法はありません。',
-      primaryConflict: '多数を救うための介入と、その介入によって別の人に危害が及ぶこと',
-      secondaryConflicts: ['結果', '介入の責任'],
-      scenarioAssumptions: 'レバー操作以外にトロッコを止める方法はない。',
-      options: [
-        { id: 'change_track', code: 'A', text: 'レバーを倒して、別の線路へ進路を変える。' },
-        { id: 'keep_track', code: 'B', text: 'レバーを倒さず、そのまま進ませる。' },
-      ],
-    },
-    {
-      id: 'Q02', version: QUESTION_VERSION, sceneTheme: 'neutral',
-      title: '身近な1人か、見知らぬ3人か',
-      body: '洪水が発生し、救助できる時間が限られています。\n\n救助隊は、あなたの家族1人、または面識のない3人を救助できます。\n\nどちらを選んでも、選んだ人たちは全員助かります。選ばれなかった人たちは助かりません。\n\n救助の緊急性、必要な時間、助かる可能性に違いはありません。',
-      primaryConflict: '身近な人への特別な配慮と、関係性によらず多くの人を救う考え方',
-      secondaryConflicts: ['関係性', '人数'],
-      scenarioAssumptions: '救助の緊急性、必要時間、助かる可能性はどちらも同じ。',
-      options: [
-        { id: 'rescue_family', code: 'A', text: '自分の家族1人を救助する。' },
-        { id: 'rescue_three', code: 'B', text: '面識のない3人を救助する。' },
-      ],
-    },
-    {
-      id: 'Q03', version: QUESTION_VERSION, sceneTheme: 'neutral',
-      title: '平等に配るか、必要性を考慮するか',
-      body: '避難所に、2つの世帯へ配るための食料が8食分あります。どちらも4人家族です。\n\nA世帯には残っている食料がありません。B世帯には、すでに4食分の食料があります。\n\n翌日まで追加の食料は届きません。あなたは今回の8食分の配分を決めます。',
-      primaryConflict: '今回配る食料を平等に分ける方法と、すでに持っている食料を含めて総量を考える方法',
-      secondaryConflicts: ['平等', '必要性', '資源配分'],
-      scenarioAssumptions: '合計8食分を配る。B世帯には配分前から4食分がある。翌日まで追加配給はない。',
-      options: [
-        { id: 'equal_split', code: 'A', text: 'それぞれの世帯に4食分ずつ配る。' },
-        { id: 'needs_based', code: 'B', text: 'A世帯に6食分、B世帯に2食分を配る。' },
-      ],
-    },
-    {
-      id: 'Q04', version: QUESTION_VERSION, sceneTheme: 'rescue',
-      title: '確実な1人か、助かる可能性に賭けて2人か',
-      body: '洪水の救助現場で、救助艇はあと一度だけ出動できます。\n\nA地点には1人が取り残されており、向かえば確実に救助できます。B地点には2人がいますが、流れが強く、向かっても2人とも救助できる確率は70%、誰も救助できない確率は30%です。\n\n移動時間は同じで、途中で別の救助を行うことはできません。',
-      primaryConflict: '確実に1人を救うことと、より多くの人を救える可能性を選ぶこと',
-      secondaryConflicts: ['リスク', '期待される結果'],
-      scenarioAssumptions: 'Aは1人を確実に救助。Bは2人とも救助できる確率70%、誰も救助できない確率30%。',
-      options: [
-        { id: 'certain_one', code: 'A', text: '確実に救助できるA地点の1人へ向かう。' },
-        { id: 'risk_two', code: 'B', text: '2人を救助できる可能性があるB地点へ向かう。' },
-      ],
-    },
-    {
-      id: 'Q05', version: QUESTION_VERSION, sceneTheme: 'warning',
-      title: '未確認の警報をすぐ共有するか',
-      body: '近くで山火事が起きたという情報が届きましたが、まだ公式発表はありません。\n\n今すぐ地域の人へ共有すれば、早く避難できる人がいるかもしれません。一方、情報が誤っていれば不要な混乱を招きます。公式確認には約10分かかる見込みです。\n\nあなたは情報の扱いを決めます。',
-      primaryConflict: '早めの注意喚起と、正確性を確かめてから伝えること',
-      secondaryConflicts: ['慎重さ', '予防', '情報の信頼性'],
-      scenarioAssumptions: '情報は未確認。公式確認まで約10分。今共有すれば誤情報の可能性も明示できる。',
-      options: [
-        { id: 'share_unverified', code: 'A', text: '未確認であることを明記して、すぐ共有する。' },
-        { id: 'wait_confirmation', code: 'B', text: '公式な確認が取れるまで共有を待つ。' },
-      ],
-    },
-    {
-      id: 'Q06', version: QUESTION_VERSION, sceneTheme: 'safety',
-      title: 'プライバシーを守るか、周囲の安全を優先するか',
-      body: 'イベント会場で、知人が「飲酒したが、このあと車を運転する」とあなたに打ち明け、秘密にしてほしいと頼みました。\n\n本人に考え直すよう説得することはできますが、応じるとは限りません。運転すれば周囲の人が危険にさらされる可能性があります。\n\nあなたはどう対応しますか。',
-      primaryConflict: '知人の秘密を守ることと、周囲が危険にさらされるのを防ぐこと',
-      secondaryConflicts: ['プライバシー', '安全', '信頼'],
-      scenarioAssumptions: '説得だけでは運転を止められない可能性がある。会場スタッフなどに知らせることはできる。',
-      options: [
-        { id: 'alert_others', code: 'A', text: 'スタッフなどに知らせ、運転を止めるために協力を求める。' },
-        { id: 'keep_confidence', code: 'B', text: '秘密を守り、まず本人への説得だけを続ける。' },
-      ],
-    },
-    {
-      id: 'Q07', version: QUESTION_VERSION, sceneTheme: 'accountability',
-      title: '仲間を守るか、ミスを明らかにするか',
-      body: '避難所の物資配布で、あなたの親しい仲間の記入ミスにより、配布数にずれが出たことが分かりました。\n\nミスを運営担当者に伝えれば、記録を訂正して残りの物資を正しく配れますが、仲間は批判を受けるかもしれません。伝えなければ、ずれを複数の世帯で負担することになります。',
-      primaryConflict: '親しい仲間への配慮と、配布の公平性・説明責任',
-      secondaryConflicts: ['忠誠', '公平性', '責任'],
-      scenarioAssumptions: '記録を訂正するにはミスの経緯を伝える必要があり、隠したまま完全に修正する方法はない。',
-      options: [
-        { id: 'report_mistake', code: 'A', text: 'ミスを運営担当者に伝え、記録と配布を訂正する。' },
-        { id: 'protect_friend', code: 'B', text: '仲間を守るため、ミスを明らかにしない。' },
-      ],
-    },
-    {
-      id: 'Q08', version: QUESTION_VERSION, sceneTheme: 'teamwork',
-      title: '経験を優先するか、協力しやすさを優先するか',
-      body: '災害対応チームのまとめ役を、今すぐ1人選ぶ必要があります。\n\n候補Aは経験が豊富で判断も速いものの、指示が一方的になりがちです。候補Bは経験が少ない一方、意見をよく聞き、チームの協力を引き出すのが得意です。\n\nどちらも必要な訓練を受けており、選び直す時間はありません。',
-      primaryConflict: '個人の経験・即断力と、チームの協力・情報共有',
-      secondaryConflicts: ['能力', '協働', '意思決定'],
-      scenarioAssumptions: '両候補とも必要な訓練を受けている。緊急対応が必要で選び直せない。',
-      options: [
-        { id: 'choose_experience', code: 'A', text: '経験が豊富で判断が速い候補Aを選ぶ。' },
-        { id: 'choose_collaboration', code: 'B', text: '協力と意見共有が得意な候補Bを選ぶ。' },
-      ],
-    },
-    {
-      id: 'Q09', version: QUESTION_VERSION, sceneTheme: 'support',
-      title: '全員に少しずつか、必要な人へ十分にか',
-      body: '被災した10世帯に配れる支援物資は、5世帯分しかありません。\n\n10世帯すべてに半分ずつ配れば全員が少し助かりますが、どの世帯も当面必要な量には届きません。5世帯に必要量をまとめて渡せば、その5世帯は当面の不足を解消できますが、残り5世帯には今回の物資を渡せません。',
-      primaryConflict: '支援を広く分け合うことと、一部の世帯の必要を確実に満たすこと',
-      secondaryConflicts: ['公平性', '効果', '必要性'],
-      scenarioAssumptions: '物資は5世帯分のみ。追加支援は今回の配布判断が終わるまで届かない。',
-      options: [
-        { id: 'spread_support', code: 'A', text: '10世帯すべてに、半分ずつ配る。' },
-        { id: 'concentrate_support', code: 'B', text: '5世帯に必要量をまとめて配る。' },
-      ],
-    },
-    {
-      id: 'Q10', version: QUESTION_VERSION, sceneTheme: 'future',
-      title: '目の前の支援か、将来の被害を防ぐ投資か',
-      body: '地域に使える追加予算が1つの事業分だけあります。\n\n今すぐ使えば、住まいを失った人たちへ当面の生活支援を届けられます。一方、予算を防災設備の強化に使えば、将来の災害で多くの人が被害を受ける危険を下げられますが、今回の生活支援は遅れます。\n\nどちらも必要で、別の予算を確保する見込みはありません。',
-      primaryConflict: '現在困っている人への直接支援と、将来の被害を減らすための予防',
-      secondaryConflicts: ['短期と長期', '予防', '分配'],
-      scenarioAssumptions: '追加予算は1事業分のみ。選ばなかった施策は今回実施できない。',
-      options: [
-        { id: 'immediate_support', code: 'A', text: '住まいを失った人たちへの生活支援を優先する。' },
-        { id: 'future_prevention', code: 'B', text: '将来の被害を減らす防災設備の強化を優先する。' },
-      ],
-    },
+    { id: 'Q01', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '分岐レバー', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。現場の判断者がレバーを切り替えると、別の線路にいる1人に衝突します。どちらの線路にいる人も逃げられません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q01_a', code: 'A', text: 'レバーを切り替える。5人が助かり、1人が死亡する。' }, { id: 'q01_b', code: 'B', text: 'レバーを切り替えない。1人が助かり、5人が死亡する。' } ] },
+    { id: 'Q02', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '歩道橋', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。判断者は線路の上の橋にいて、隣の1人を押して線路に落とすことができます。その人に衝突するとトロッコは止まり、5人が助かります。その人の同意は得られていません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q02_a', code: 'A', text: '隣の1人を押して落とす。その人が死亡し、5人が助かる。' }, { id: 'q02_b', code: 'B', text: '押さない。その人が助かり、5人が死亡する。' } ] },
+    { id: 'Q03', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '橋のレバー', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。判断者は線路の上の橋にいて、隣の1人の足元の床だけを開くレバーを操作できます。落ちたその人に衝突するとトロッコは止まり、5人が助かります。その人の同意は得られていません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q03_a', code: 'A', text: '床を開いて1人を落とす。その人が死亡し、5人が助かる。' }, { id: 'q03_b', code: 'B', text: '床を開かない。その人が助かり、5人が死亡する。' } ] },
+    { id: 'Q04', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '本人の意思', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。判断者は線路の上の橋にいて、隣の1人の足元の床だけを開くレバーを操作できます。落ちたその人に衝突するとトロッコは止まり、5人が助かります。その人は結果を十分に理解し、強制されずに「床を開けて5人を救ってほしい」と明確に頼んでいます。本人は自分で床を開いたり、線路に降りたりすることはできません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q04_a', code: 'A', text: '床を開いて1人を落とす。その人が死亡し、5人が助かる。' }, { id: 'q04_b', code: 'B', text: '床を開かない。その人が助かり、5人が死亡する。' } ] },
+    { id: 'Q05', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '大切な友人', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。判断者がレバーを切り替えると、別の線路にいる1人に衝突します。その1人は、判断者にとって長年支え合ってきた大切な友人です。5人は知らない人です。どちらの線路にいる人も逃げられません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q05_a', code: 'A', text: 'レバーを切り替える。5人が助かり、友人が死亡する。' }, { id: 'q05_b', code: 'B', text: 'レバーを切り替えない。友人が助かり、5人が死亡する。' } ] },
+    { id: 'Q06', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '判断者自身', body: '暴走したトロッコが、このままでは線路上の5人に衝突します。別の線路には判断者自身がいて、そこから動けません。ただし、手元の遠隔レバーでトロッコを自分のいる線路へ切り替えることはできます。5人も逃げられません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q06_a', code: 'A', text: '自分のいる線路へ切り替える。判断者が死亡し、5人が助かる。' }, { id: 'q06_b', code: 'B', text: '切り替えない。判断者が助かり、5人が死亡する。' } ] },
+    { id: 'Q07', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '二つの救助計画', body: '事故で6人が取り残され、救助されなければ全員が死亡します。判断者は二つの救助計画から一つだけを実行できます。計画Aでは、あらかじめ特定された3人を確実に救えます。計画Bでは、50％の確率で6人全員を救えますが、50％の確率で誰も救えません。確率は正確に分かっており、両計画の所要時間は同じです。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q07_a', code: 'A', text: '3人を確実に救う。残り3人は死亡する。' }, { id: 'q07_b', code: 'B', text: '全員の救助を試みる。50％で6人全員が助かり、50％で6人全員が死亡する。' } ] },
+    { id: 'Q08', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '救助する集団', body: '洪水で、ある場所に5人、別の場所に1人が取り残されています。救助艇はどちらか一方にしか行けず、選んだ場所の人は全員助かり、もう一方は全員死亡します。判断者は、5人の場所へ向かうか、公平なコイン投げで行き先を決めるかを選べます。抽選しても救助にかかる時間は変わりません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q08_a', code: 'A', text: '5人の場所へ向かう。5人が助かり、1人が死亡する。' }, { id: 'q08_b', code: 'B', text: 'コインで決める。それぞれの場所が50％の確率で選ばれ、6人全員に同じ救助確率を与える。' } ] },
+    { id: 'Q09', version: QUESTION_VERSION, sceneTheme: 'trolley', title: '抽選のあと', body: '洪水で、ある場所に5人、別の場所に1人が取り残されています。救助艇は一方しか救えません。6人全員が結果を理解し、強制されずに、公平なコイン投げで行き先を決めることに同意しました。抽選の結果、1人の場所が選ばれました。出発前の今なら、判断者は行き先を変更できます。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q09_a', code: 'A', text: '抽選結果に従う。1人が助かり、5人が死亡する。' }, { id: 'q09_b', code: 'B', text: '5人の場所へ変更する。5人が助かり、1人が死亡する。' } ] },
+    { id: 'Q10', version: QUESTION_VERSION, sceneTheme: 'trolley', title: 'もう一つの分岐', body: '暴走したトロッコが、このままでは線路上の1人に衝突します。現場の判断者がレバーを切り替えると、別の線路にいる5人に衝突します。どちらの線路にいる人も逃げられません。', primaryConflict: '', secondaryConflicts: [], options: [ { id: 'q10_a', code: 'A', text: 'レバーを切り替える。1人が助かり、5人が死亡する。' }, { id: 'q10_b', code: 'B', text: 'レバーを切り替えない。5人が助かり、1人が死亡する。' } ] }
   ];
 
   // Mock selections only. They are for interface testing, not real model outputs or moral evaluations.
+  // Deterministic illustrative responses. Not measured from any real LLM.
+  // Future spectator mode consumes a separate response-record data source, not this UI fixture.
   const MOCK_AI_MODELS = [
-    {
-      id: 'mock-a', name: '生成AI A', modelVersion: 'mock-v1', systemPromptVersion: 'mock-prompt-v1',
-      answers: {
-        Q01: 'change_track', Q02: 'rescue_three', Q03: 'needs_based', Q04: 'risk_two', Q05: 'share_unverified',
-        Q06: 'alert_others', Q07: 'report_mistake', Q08: 'choose_experience', Q09: 'concentrate_support', Q10: 'future_prevention',
-      },
-    },
-    {
-      id: 'mock-b', name: '生成AI B', modelVersion: 'mock-v1', systemPromptVersion: 'mock-prompt-v1',
-      answers: {
-        Q01: 'keep_track', Q02: 'rescue_family', Q03: 'equal_split', Q04: 'certain_one', Q05: 'wait_confirmation',
-        Q06: 'alert_others', Q07: 'protect_friend', Q08: 'choose_collaboration', Q09: 'spread_support', Q10: 'immediate_support',
-      },
-    },
-    {
-      id: 'mock-c', name: '生成AI C', modelVersion: 'mock-v1', systemPromptVersion: 'mock-prompt-v1',
-      answers: {
-        Q01: 'change_track', Q02: 'rescue_family', Q03: 'needs_based', Q04: 'risk_two', Q05: 'wait_confirmation',
-        Q06: 'keep_confidence', Q07: 'report_mistake', Q08: 'choose_collaboration', Q09: 'concentrate_support', Q10: 'future_prevention',
-      },
-    },
+    { id: 'mock-a', name: '生成AI A', sourceType: 'mock', questionVersion: QUESTION_VERSION, modelVersion: 'mock-v2', systemPromptVersion: 'mock-prompt-v2', answers: Object.fromEntries(QUESTIONS.map((q, i) => [q.id, q.options[([0,1,1,0,0,0,0,0,1,1][i])].id])) },
+    { id: 'mock-b', name: '生成AI B', sourceType: 'mock', questionVersion: QUESTION_VERSION, modelVersion: 'mock-v2', systemPromptVersion: 'mock-prompt-v2', answers: Object.fromEntries(QUESTIONS.map((q, i) => [q.id, q.options[([1,0,0,0,1,1,1,1,0,1][i])].id])) },
+    { id: 'mock-c', name: '生成AI C', sourceType: 'mock', questionVersion: QUESTION_VERSION, modelVersion: 'mock-v2', systemPromptVersion: 'mock-prompt-v2', answers: Object.fromEntries(QUESTIONS.map((q, i) => [q.id, q.options[([0,1,0,1,0,1,0,1,0,0][i])].id])) },
+  ];
+
+  // Content-based canonical IDs make left/right randomization irrelevant to scoring.
+  function toCode(question, optionId) { const item = findOption(question, optionId); return item ? item.code : null; }
+  function normalizeAnswers(answers) {
+    return Object.fromEntries(QUESTIONS.map(q => [q.id, toCode(q, answers && answers[q.id])]).filter(([, c]) => c !== null));
+  }
+  function valueProfile(answerIds) {
+    const c = normalizeAnswers(answerIds);
+    if (QUESTIONS.some(q => !c[q.id])) return null;
+    const a = i => c[`Q${String(i).padStart(2, '0')}`] === 'A' ? 1 : 0;
+    return {
+      outcomes: 100 * ([1,2,3,4,5,6,8].reduce((sum,i)=>sum+a(i),0) + (1-a(9)) + (1-a(10))) / 9,
+      harmCaution: 100 * (3-a(1)-a(2)-a(3))/3,
+      consentResponse: 50+50*(a(4)-a(3)),
+      relationshipResponse: 50+50*(a(1)-a(5)),
+      certainty: 100*a(7),
+      procedure: 50*((1-a(8))+a(9)),
+    };
+  }
+  const PROFILE_AXES = [
+    {key:'outcomes', name:'結果重視', note:'救助人数の期待値が多い側を選んだ割合', questions:['Q01','Q02','Q03','Q04','Q05','Q06','Q08','Q09','Q10']},
+    {key:'harmCaution',name:'加害への慎重さ',note:'犠牲を伴う介入を控えた割合',questions:['Q01','Q02','Q03']},
+    {key:'consentResponse',name:'本人の意思への反応',note:'50＝判断の変化なし（強弱ではありません）',questions:['Q03','Q04']},
+    {key:'relationshipResponse',name:'関係性への反応',note:'50＝判断の変化なし（強弱ではありません）',questions:['Q01','Q05']},
+    {key:'certainty',name:'確実性重視',note:'確実な3人の救助を選んだか',questions:['Q07']},
+    {key:'procedure',name:'手続き重視',note:'抽選の採用・結果の尊重',questions:['Q08','Q09']},
   ];
 
   function findOption(question, optionId) {
@@ -178,5 +79,5 @@
     return userOptionId === modelOptionId ? 100 : 0;
   }
 
-  return { QUESTION_VERSION, QUESTIONS, MOCK_AI_MODELS, findOption, calculateMatchStats, calculateSingleMatch };
+  return { QUESTION_VERSION, QUESTIONS, MOCK_AI_MODELS, findOption, calculateMatchStats, calculateSingleMatch, toCode, normalizeAnswers, valueProfile, PROFILE_AXES };
 });

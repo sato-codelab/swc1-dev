@@ -107,15 +107,31 @@
         </section>
       </div>
 
+      <div class="result-overlay" id="profileOverlay" aria-hidden="true">
+        <section class="result-panel profile-panel" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+          <div class="result-kicker">VALUE PROFILE · 10 QUESTIONS</div>
+          <h2 id="profileTitle">あなたとAIの価値観プロフィール</h2>
+          <p class="profile-lead" id="profileLead"></p>
+          <div class="profile-legend"><span>あなた</span><span>生成AI（モック）</span></div>
+          <div class="profile-axes" id="profileAxes"></div>
+          <div class="profile-insights"><p id="profileCommon"></p><p id="profileDifference"></p></div>
+          <details class="profile-details"><summary>この診断文の根拠を見る（全10問）</summary><div id="profileEvidence"></div></details>
+          <p class="result-disclaimer" id="profileNote"></p>
+          <button class="next-button" type="button" id="profileRestart">もう一度診断する</button>
+          <button class="restart-button" type="button" id="profileHome">スタート画面に戻る</button>
+        </section>
+      </div>
+
       <div class="result-overlay" id="startOverlay" aria-hidden="true">
         <section class="result-panel" role="dialog" aria-modal="true" aria-labelledby="startTitle">
           <div class="result-kicker">倫理的ジレンマ診断</div>
           <h2 id="startTitle">価値判断AIマッチング</h2>
-          <p class="start-lead">トロッコに乗って、全10問のジレンマに答えます。最後に、3つのAIと回答がどれだけ重なったかを確認できます。</p>
+          <p class="start-lead">全10問の倫理的ジレンマで、現場の判断者がどちらを選ぶべきかを答えます。最後にAIモックとの一致率と6軸の回答プロフィールを確認できます。</p>
           <ul class="start-points">
-            <li>正解・不正解はありません。あなた自身ならどうするかで選んでください。</li>
+            <li>正解・不正解はありません。判断者はどうすべきか、あなたの考えで選んでください。</li>
             <li>左右の選択肢をクリック、または ← → キーで回答します。</li>
-            <li>AIの回答は動作確認用のモックデータです。</li>
+            <li>各問は独立した架空の場面です。書かれた二つの方法だけを選べます。確率が示されていなければ結果は確実とします。記載がない限り登場人物は互いに知らない成人で、条件は同等です。書かれていない事情は想定せず答えてください。</li>
+            <li>AIの回答は動作確認用のモックデータであり、一致率は倫理的な優劣を示しません。</li>
           </ul>
           <button class="next-button" type="button" id="startButton">診断をはじめる</button>
           <button class="restart-button" type="button" id="startRestartButton" hidden>最初からやり直す</button>
@@ -133,7 +149,7 @@
         </section>
       </div>
     </section>
-    <footer class="page-foot">全10問に回答すると、AIごとの回答一致率を確認できます。 <span>← → キーでも選択できます ・ 外部通信なし・回答はこのブラウザに保存</span></footer>
+    <footer class="page-foot">全10問の回答一致率・6軸プロフィールは人格や倫理的優劣を示しません。AI回答はモックです。 <span>← → キーでも選択できます ・ 外部通信なし・回答はこのブラウザに保存</span></footer>
   </main>
   <script src="app-core.js" defer></script>
   <script src="store.js" defer></script>

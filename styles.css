@@ -278,3 +278,24 @@ button { font: inherit; }
 .comparison-row.is-top { margin:0 -10px; padding-left:10px; padding-right:10px; border-radius:10px; background:rgba(58,96,65,.1); }
 .ai-badge { margin-left:8px; padding:2px 8px; border-radius:99px; background:var(--accent); color:#fff; font-size:11px; font-weight:800; vertical-align:middle; }
 @media (max-width:650px) { .skip-button { top:6px; right:7px; } .ride-caption { max-width:calc(100% - 120px); } }
+
+/* Six descriptive axes, two parallel bars; never a global morality score. */
+.profile-panel { width:min(780px,94vw); max-height:min(90svh,850px); overflow-y:auto; }
+.profile-lead { font-weight:750; line-height:1.65; }
+.profile-legend { display:flex; gap:20px; font-size:11px; margin:8px 0; color:var(--muted); }
+.profile-axes { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+.profile-axis { padding:11px; border-radius:12px; border:1px solid var(--line); background:#fafbf6; min-width:0; }
+.profile-axis-head { font-weight:850; font-size:13px; }
+.profile-axis small { display:block; color:var(--muted); margin:4px 0 8px; line-height:1.45; }
+.profile-bar-line { display:grid;grid-template-columns:85px 1fr;gap:7px;align-items:center;margin-top:5px;font-size:11px; }
+.profile-bar { background:#e6ebe2;height:9px;border-radius:20px;overflow:hidden; }
+.profile-bar i { display:block;height:100%;border-radius:inherit; }
+.profile-me { background:#2968c5; } .profile-ai { background:#cf8c42; }
+.profile-insights {font-size:12px;line-height:1.65;padding:5px 0;}
+.profile-details {font-size:12px;line-height:1.6;border-top:1px solid var(--line);padding-top:10px;}
+.profile-details summary {cursor:pointer;font-weight:750;}
+.profile-details p {margin:5px 0;}
+@media (max-width:620px) { .profile-axes {grid-template-columns:1fr;} .profile-panel {max-height:94svh;} }
+
+#optionsOverlay { z-index:30; }
+.profile-panel {width:min(780px,100%);max-height:calc(100% - 12px);}

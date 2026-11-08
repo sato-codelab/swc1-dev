@@ -53,7 +53,7 @@
     scene.playChoice(position, showQuestionResult, { instant: settings.skipAnimation });
   });
   view.onSkip(() => scene.skip());
-  view.onNext(() => { if (store.advance()) showQuestion(); else showSummary(); });
+  view.onNext(() => { if (view.isSummaryVisible()) { view.showProfile(AppPresenter.profile({core, answers: store.answers, models})); } else if (store.advance()) showQuestion(); else showSummary(); });
   view.onRestart(() => { store.reset(); showQuestion(); });
   view.onHome(() => { store.reset(); showQuestion(); showStart(); });
   view.bindOptions(() => ({ skipAnimation: settings.skipAnimation }), (on) => settings.set('skipAnimation', on));
