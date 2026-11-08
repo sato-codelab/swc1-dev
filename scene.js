@@ -1,4 +1,4 @@
-/* Trolley scene: animation + theme only. Knows nothing about questions or answers. */
+/* トロッコの演出を管理する。回答の保存や採点は行わない。 */
 (function (root) {
   'use strict';
 
@@ -69,7 +69,7 @@
         [...scene.classList].filter((c) => c.startsWith('question-type-')).forEach((c) => scene.classList.remove(c));
         scene.classList.add(`question-type-${theme || 'neutral'}`);
       },
-      /** labels: { left: 'A', right: 'B' } – badge text shown on each abstract choice marker */
+      /** labels: { left: 'A', right: 'B' } – badge text shown on each choice marker */
       setTargets(labels) {
         Object.entries(targets).forEach(([pos, t]) => { t.querySelector('.target-badge').textContent = labels[pos] || ''; });
       },

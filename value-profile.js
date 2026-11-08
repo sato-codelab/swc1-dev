@@ -1,4 +1,4 @@
-/* Six descriptive axes; no overall score, no randomness, no personality inference. */
+/* 10問の回答を6つの観点で記述する。総合点や人格の判定は行わない。 */
 (function (root, factory) {
   const api = factory(typeof module === 'object' && module.exports ? require('./app-core.js') : root.AppCore);
   if (typeof module === 'object' && module.exports) module.exports = api;

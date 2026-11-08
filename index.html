@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="theme-color" content="#dce8d4" />
-  <meta name="description" content="価値判断AIマッチング（仮称） 10場面の回答プロフィール" />
-  <title>価値判断AIマッチング（仮称）</title>
+  <meta name="description" content="価値判断AIマッチング 10場面の回答プロフィール" />
+  <title>価値判断AIマッチング</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,7 +16,7 @@
       </div>
       <div class="brand-copy">
         <p class="eyebrow">倫理的ジレンマ診断</p>
-        <h1>価値判断AIマッチング <span>（仮称）</span></h1>
+        <h1>価値判断AIマッチング</h1>
       </div>
       <div class="progress-pill" id="progressPill" aria-label="全10問中1問目">QUESTION 1 / 10</div>
       <button class="options-button" id="optionsButton" type="button">オプション</button>
@@ -93,7 +93,7 @@
       </div>
 
     </section>
-    <footer class="page-foot">全10問の回答からプロフィールを表示します。一致度は倫理的な優劣を示しません。 <span>← → キーでも選択できます ・ 外部通信なし・回答はこのブラウザに保存</span></footer>
+    <footer class="page-foot">全10問の回答からプロフィールを表示します。一致度は倫理的な優劣を示しません。 <span>← → キーでも選択できます ・ 回答はこのブラウザに保存されます</span></footer>
   </main>
       <div class="result-overlay" id="resultOverlay" aria-hidden="true">
         <section class="result-panel" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="resultTitle">
@@ -102,12 +102,12 @@
           <p class="result-selected" id="resultSelected">あなたの回答：—</p>
           <p class="data-notice" id="dataNotice" hidden></p>
           <div class="comparison" id="comparisonSection">
-            <div class="comparison-header"><span id="comparisonTitle">AIの回答との比較</span><span class="comparison-note" id="comparisonNote">モックデータ</span></div>
+            <div class="comparison-header"><span id="comparisonTitle">AIの回答との比較</span><span class="comparison-note" id="comparisonNote">サンプルAI</span></div>
             <div class="comparison-list" id="comparisonList"></div>
           </div>
           <section id="profileSection" hidden></section>
           <p class="result-disclaimer" id="resultDisclaimer">一致率は今回の問題に対する回答の一致割合です。倫理的な優劣を表すものではありません。</p>
-          <button class="next-button" type="button" id="nextButton">次の問題へ</button>
+          <div class="result-next" id="nextAction"><button class="next-button" type="button" id="nextButton">次の問題へ</button></div>
           <button class="restart-button" type="button" id="restartButton">診断を最初からやり直す</button>
           <button class="restart-button" type="button" id="homeButton" hidden>スタート画面に戻る</button>
           <button class="text-button" type="button" data-open-options>オプション</button>
@@ -118,10 +118,10 @@
         <section class="result-panel" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="startTitle">
           <div class="result-kicker">倫理的ジレンマ診断</div>
           <h2 id="startTitle">価値判断AIマッチング</h2>
-          <p class="start-lead">10の架空場面での選択を、6つの観点から振り返ります。最後に3つのAIサンプルとの近さを確認できます。</p>
+          <p class="start-lead">10の架空場面での選択を、6つの観点から振り返ります。回答ごとにAIとの共通点を確認し、最後に全体の傾向を振り返ります。</p>
           <div class="common-instructions" id="startInstructions"></div>
-          <p class="result-disclaimer">左右の選択肢をクリック、または ← → キーで回答します。AIの回答と解説は、全10問の回答後に表示します。</p>
-          <p class="data-notice">AIは動作確認用の架空データです。一致度は人格全体や倫理的な優劣を示しません。</p>
+          <p class="result-disclaimer">左右の選択肢をクリック、または ← → キーで回答します。各回答後にAIとの一致率、全10問の回答後にプロフィールを表示します。</p>
+          <p class="data-notice">AIの回答は架空のサンプルです。実在するAIの測定結果ではありません。一致度は人格全体や倫理的な優劣を示しません。</p>
           <p class="restore-notice" id="restoreNotice" hidden></p>
           <button class="next-button" type="button" id="startButton">診断をはじめる</button>
           <button class="restart-button" type="button" id="startRestartButton" hidden>最初からやり直す</button>
@@ -136,7 +136,7 @@
             <span><strong>演出をスキップ</strong><small>回答後のトロッコの演出を省略して、すぐに回答確認を表示します。設定はこのブラウザに保存されます。</small></span>
             <input type="checkbox" id="skipToggle" role="switch" />
           </label>
-          <p class="result-disclaimer">一致度は、この10場面での選択の近さを示します。倫理的な優劣を示しません。AIは架空データです。</p>
+          <p class="result-disclaimer">一致度は、この10場面での選択の近さを示します。倫理的な優劣を示しません。AIの回答は架空のサンプルです。</p>
           <button class="next-button" type="button" id="optionsClose">閉じる</button>
         </section>
       </div>

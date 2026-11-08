@@ -1,4 +1,4 @@
-/* Recorded response boundary. Frequencies and representative choices are distinct. */
+/* 回答回数と代表回答を分離して扱う。サンプル値は実測値ではない。 */
 (function (root, factory) {
   const api = factory(typeof module === 'object' && module.exports ? require('./app-core.js') : root.AppCore);
   if (typeof module === 'object' && module.exports) module.exports = api;
@@ -55,7 +55,7 @@
     return Object.fromEntries(core.QUESTIONS.map(q => [q.id, getAnswer(model, q).probabilityA]));
   }
 
-  // Future spectator mode consumes this read-only projection; ties never become a forced choice.
+  // 同数の場合は代表回答を決めず、nullを返す。
   function getRepresentativeAnswers(model) {
     return Object.fromEntries(core.QUESTIONS.map(q => [q.id, getAnswer(model, q).representativeOptionId]));
   }

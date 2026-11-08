@@ -1,4 +1,4 @@
-/* Diagnosis state owns its writes. Spectator code may consume snapshot(), never answer(). */
+/* 診断回答と表示順を保存する。snapshotは独立したコピーを返す。 */
 (function (root, factory) {
   const api = factory();
   if (typeof module === 'object' && module.exports) module.exports = api;

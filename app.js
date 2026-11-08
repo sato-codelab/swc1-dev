@@ -1,4 +1,4 @@
-/* Diagnosis controller. Future spectator controller owns a separate state/session. */
+/* 診断の画面遷移と各層の接続を管理する。 */
 (function () {
   'use strict';
   const core = AppCore, modelData = AppModels, profiles = AppProfile;
@@ -35,7 +35,7 @@
     scene.playChoice(position,() => {
       if (generation !== token || phase !== 'animating') return;
       phase = 'confirmation';
-      view.showResult(AppPresenter.questionResult({core,question:store.question(),answer,isLast:store.isLast(),storageAvailable:store.storageAvailable}));
+      view.showResult(AppPresenter.questionResult({core,modelData,models:modelData.MOCK_AI_MODELS,question:store.question(),answer,isLast:store.isLast(),storageAvailable:store.storageAvailable}));
     },{instant:settings.skipAnimation || reducedMotion.matches});
   });
   view.onSkip(() => { if (phase === 'animating') scene.skip(); });

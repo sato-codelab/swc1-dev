@@ -1,4 +1,4 @@
-/* DOM + focus management. No scoring, persistence, or model-data interpretation. */
+/* 表示データの描画、入力イベント、フォーカスを管理する。 */
 (function (root) {
   'use strict';
   function create(doc) {
@@ -55,7 +55,7 @@
       const select = append(label,'select'); select.id = 'profileModel';
       vm.models.forEach(m => { const o = append(select,'option','',m.name); o.value = m.id; }); select.value = vm.selectedModelId;
       select.addEventListener('change',() => onModelSelect(select.value));
-      append(host,'p','profile-guide','あなたの回答と、AIのA/B選択率から計算した値を並べます。高いほど優れているという意味ではありません。');
+      append(host,'p','profile-guide','この10問での選び方を6つの観点で振り返ります。数値の高さは、良し悪しを表しません。');
       const grid = append(host,'div','profile-grid');
       vm.axes.forEach(axis => {
         const card = append(grid,'article','axis-card');
@@ -71,28 +71,34 @@
       append(host,'p','profile-guide','「本人の意思への反応」「関係性への反応」の50は、2場面で判断の変化がなかったことを示します。AIでは各場面のA選択率の差であり、同じ個体が考えを変えた割合ではありません。');
       const narrative = append(host,'section','profile-narrative'); append(narrative,'h3','','今回の回答から');
       append(narrative,'p','',vm.narrative.common); append(narrative,'p','',vm.narrative.difference);
-      const explanation = detail(narrative,'このプロフィール文の根拠を見る');
+      const explanation = detail(narrative,'どの回答から分かる？');
       vm.evidence.filter(e => vm.narrative.evidenceIds.includes(e.id)).forEach(e => explanation.append(evidenceCard(e)));
       vm.pairs.forEach(pair => {
         const section = append(host,'section','pair-note'); append(section,'h4','',`${pair.title}（${pair.ids.join('・')}）`); append(section,'p','',pair.text);
       });
-      const all = detail(host,'全10問の回答とAIの回数を見る');
+      const all = detail(host,'全10問の回答を詳しく見る');
       vm.evidence.forEach(e => all.append(evidenceCard(e)));
-      const method = detail(host,'数値の計算方法・データの条件');
-      append(method,'p','','選択一致度は、各問であなたが選んだ内容をAIが選んだ割合の10問平均です。表示は整数に丸め、最も近いAIの判定には丸め前の値を使います。小さな差は決定的な相性差を示しません。');
+      const method = detail(host,'結果の見方と比較方法');
+      append(method,'p','','各問の結果は、AIの代表回答との一致・不一致を100%／0%で示します。全体の選択一致度は、AIの回答のばらつきも含めて、あなたと同じ選択をした割合を10問で平均したものです。表示は整数に丸め、最も近いAIの判定には丸め前の値を使います。小さな差は決定的な相性差を示しません。');
       append(method,'p','','AIの割合は有効回答内の割合です。代表回答は多数側を採用し、同数ならA/B拮抗として片側を選びません。全10問の有効回答がそろわないモデルは総合順位の対象外です。');
       append(method,'p','','以下では、原稿のAを選ぶとa=1、Bを選ぶとa=0です。AIにはAの選択率を代入します。6軸は独立した性格因子ではなく、総合点や平均点は作りません。');
       const list = append(method,'ul','formula-list'); vm.axes.forEach(a => append(list,'li','',`${a.name}：${a.formula}`));
-      append(method,'p','',vm.metadata); append(method,'p','',vm.collectionMethod);
+      const sourceDetails = detail(method,'AI回答の出典と条件');
+      append(sourceDetails,'p','',vm.metadata); append(sourceDetails,'p','',vm.collectionMethod);
     }
     function renderResult(vm) {
       $('resultKicker').textContent = vm.kicker; $('resultTitle').textContent = vm.title; $('resultSelected').textContent = vm.selected;
       $('comparisonTitle').textContent = vm.comparisonTitle; $('comparisonNote').textContent = vm.comparisonNote;
-      $('comparisonList').replaceChildren(...vm.rows.map(row)); $('comparisonSection').hidden = !vm.rows.length;
-      $('dataNotice').hidden = !vm.profile; $('dataNotice').textContent = vm.profile ? vm.profile.source : '';
+      $('comparisonList').replaceChildren(...vm.rows.slice(0,5).map(row));
+      if (vm.rows.length > 5) {
+        const more = detail($('comparisonList'),`残りの${vm.rows.length-5}モデルを見る`);
+        vm.rows.slice(5).forEach(r => more.append(row(r)));
+      } $('comparisonSection').hidden = !vm.rows.length;
+      const source = vm.source || (vm.profile && vm.profile.source);
+      $('dataNotice').hidden = !source; $('dataNotice').textContent = source || '';
       renderProfile(vm.profile);
       $('resultDisclaimer').textContent = vm.disclaimer;
-      $('nextButton').hidden = vm.primaryLabel == null; $('nextButton').textContent = vm.primaryLabel || '';
+      $('nextAction').hidden = vm.primaryLabel == null; $('nextButton').hidden = vm.primaryLabel == null; $('nextButton').textContent = vm.primaryLabel || '';
       $('restartButton').textContent = vm.restartLabel; $('homeButton').hidden = !vm.isSummary;
       $('resultOverlay').classList.toggle('is-summary',vm.isSummary);
     }
