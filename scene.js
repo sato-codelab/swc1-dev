@@ -15,17 +15,16 @@
     const scene = $('scene'), stage = $('trolleyStage'), impact = $('impactEffect'), status = $('sceneStatus');
     const sparks = { left: $('sparkLeft'), right: $('sparkRight') };
     const targets = { left: $('targetLeft'), right: $('targetRight') };
-    let timers = [];
+    const clock = root.AppPlaybackClock.create();
+    let pausedAnimations = [];
     let pendingDone = null;
     let generation = 0;
 
-    const later = (fn, ms) => {
-      const token = generation;
-      timers.push(setTimeout(() => { if (token === generation) fn(); }, ms));
-    };
+    const later = (fn, ms) => clock.later(fn, ms);
     const cancel = () => {
-      generation += 1; timers.forEach(clearTimeout); timers = []; pendingDone = null;
-      scene.classList.remove('is-playing');
+      generation += 1; clock.cancel(); pendingDone = null;
+      pausedAnimations.forEach(animation => { if(animation.playState === 'paused') animation.play(); }); pausedAnimations = [];
+      scene.classList.remove('is-playing', 'is-paused');
     };
     const retrigger = (el, cls) => { el.classList.remove(cls); void el.offsetWidth; el.classList.add(cls); };
 
@@ -38,8 +37,9 @@
       }));
     });
 
-    function calm() {
+    function calm({keepTargets = false} = {}) {
       scene.classList.remove('is-choice-left', 'is-choice-right', 'is-sprinting', 'is-impact');
+      if(!keepTargets)Object.values(targets).forEach(t=>t.classList.remove('is-launched')); 
       stage.classList.remove('tilt-left', 'tilt-right');
       impact.classList.remove('active');
       sparks.left.classList.remove('animate-sparks');
@@ -54,6 +54,19 @@
 
     return {
       cancel,
+      pause() {
+        if (clock.paused) return;
+        clock.pause();
+        void scene.offsetWidth;
+        pausedAnimations = scene.getAnimations ? scene.getAnimations({subtree:true}).filter(a => a.playState === 'running') : [];
+        pausedAnimations.forEach(a => a.pause());
+        scene.classList.add('is-paused');
+      },
+      resume() {
+        scene.classList.remove('is-paused');
+        pausedAnimations.forEach(a => { if (a.playState === 'paused') a.play(); });
+        pausedAnimations = []; clock.resume();
+      },
       /** Ends a running choice animation immediately and shows the result. */
       skip() {
         if (!pendingDone) return;
@@ -76,8 +89,10 @@
       reset() {
         cancel();
         pendingDone = null;
-        scene.classList.remove('is-playing', 'is-skipping');
+        scene.classList.add('is-skipping');
         calm();
+        void scene.offsetWidth;
+        scene.classList.remove('is-playing', 'is-skipping');
         scene.classList.add('is-running');
         status.textContent = TEXT.idle;
       },
@@ -93,8 +108,8 @@
         stage.classList.add(position === 'left' ? 'tilt-left' : 'tilt-right');
         retrigger(sparks[position], 'animate-sparks');
         status.textContent = TEXT.sprint;
-        later(() => { scene.classList.add('is-impact'); retrigger(impact, 'active'); status.textContent = TEXT.impact; }, TIMINGS.impact);
-        later(() => { calm(); status.textContent = TEXT.settled; }, TIMINGS.settle);
+        later(() => { scene.classList.add('is-impact'); targets[position].classList.add('is-launched'); retrigger(impact, 'active'); status.textContent = TEXT.impact; }, TIMINGS.impact);
+        later(() => { calm({keepTargets:true}); status.textContent = TEXT.settled; }, TIMINGS.settle);
         later(finish, TIMINGS.done);
       },
     };

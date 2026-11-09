@@ -391,3 +391,139 @@ summary { cursor:pointer; font-weight:700; }
 .ride-caption { font-size:14px; }
 #sceneStatus { min-width:0; overflow:hidden; text-overflow:ellipsis; }
 .result-next { position:sticky; bottom:-1px; padding:12px 0; background:#f9faf6; z-index:1; }
+
+/* 観戦操作はシーンの外側に配置し、人型・車輪・選択肢を覆わない。 */
+.spectator-hud { width:min(1280px,100%); margin:0 auto; padding:14px 18px; border:1px solid #bccbb9; border-radius:16px; background:#fafbf6; }
+.spectator-heading { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
+.spectator-controls { display:flex; gap:8px; flex-wrap:wrap; }
+.spectator-controls button { padding:9px 13px; min-height:44px; border:1px solid #8fa58f; border-radius:9px; background:#fff; color:#203026; cursor:pointer; }
+.spectator-controls button:disabled { opacity:.5; cursor:default; }
+.spectator-choice { font-size:15px; line-height:1.7; }
+.spectator-table { max-height:240px; overflow:auto; overscroll-behavior:contain; }
+.spectator-answer { padding:12px 0; border-top:1px solid #cbd6c7; display:grid; gap:5px; font-size:15px; line-height:1.6; }
+.spectator-answer small { color:#46564b; font-size:13px; }
+.spectator-settings { display:grid; gap:12px; margin:16px 0; }
+.spectator-settings label:not(.spectator-check) { display:grid; gap:8px; }
+.spectator-settings select { width:100%; font:inherit; padding:10px; color:#203026; background:#fff; border:1px solid #92a78f; border-radius:8px; }
+.spectator-models { border:1px solid #bccbb9; border-radius:10px; padding:12px; }
+#spectatorModels { max-height:200px; overflow:auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:6px; }
+.spectator-check { display:flex; align-items:center; gap:10px; min-height:44px; }
+.spectator-check input { width:20px; height:20px; accent-color:#3a6041; }
+#spectatorBegin:disabled { background:#d5dad4; color:#586458; cursor:default; }
+.scene.is-paused *, .scene.is-paused *::before, .scene.is-paused *::after { animation-play-state:paused !important; }
+.is-spectating .scene .skip-button { display:none; }
+@media(max-width:650px) { .spectator-hud { padding:12px; } .spectator-controls { flex-wrap:nowrap; overflow-x:auto; padding:4px 2px; } .spectator-controls button { flex:none; } }
+
+/* 画面内で読み進められる配置。小さい画面や拡大時は領域内スクロールを許可する。 */
+[tabindex="-1"]:focus { outline:none; }
+button:focus:not(:focus-visible), select:focus:not(:focus-visible) { outline:none; }
+button:focus-visible, summary:focus-visible, select:focus-visible { outline:3px solid #648b70; outline-offset:3px; }
+.brand-home { display:flex; align-items:center; gap:10px; border:0; padding:0; background:none; color:inherit; text-align:left; cursor:pointer; min-width:0; }
+.brand-copy,.eyebrow { display:block; }
+.brand-title { display:block; font-size:clamp(14px,1.55vw,20px); font-weight:800; line-height:1.3; }
+#progressPill { display:none; }
+.options-button { margin-left:auto; }
+.app-shell { height:100dvh; min-height:0; overflow:hidden; gap:8px; padding-bottom:8px; }
+.question-card { max-height:30dvh; overflow:auto; flex-shrink:0; }
+.question-body { margin-top:6px; font-size:clamp(15px,1.15vw,17px); line-height:1.65; max-width:none; }
+.question-card h2 { font-size:clamp(19px,1.8vw,24px); }
+.question-number { margin-bottom:3px; }
+.question-note { margin-top:5px; }
+.common-assumptions { margin-top:4px; }
+.scene { flex:1 1 auto; height:auto; min-height:260px; }
+.page-foot { font-size:11px; }
+.page-foot span { display:none; }
+.ride-bar { position:absolute; z-index:12; top:8px; left:10px; right:10px; display:flex; align-items:center; gap:12px; padding-right:0; }
+.ride-bar .ride-caption { position:static; transform:none; min-width:0; max-width:none; flex:1; font-size:12px; }
+.question-steps { display:flex; align-items:center; flex:none; gap:0; padding:6px 8px; border-radius:30px; background:rgba(249,252,246,.95); }
+.progress-step { position:relative; width:22px; height:26px; padding:0; border:0; background:none; cursor:pointer; }
+.progress-step::before { content:''; position:absolute; left:1px; right:1px; top:6px; height:14px; border:2px solid #66806c; border-radius:50%; background:#f7faf3; z-index:1; }
+.progress-step:not(:last-child)::after { content:''; position:absolute; top:11px; left:16px; width:12px; height:5px; background:#66806c; }
+.progress-step.is-done::before { background:#436d50; }
+.progress-step.is-current::before { border:3px solid #203e2c; box-shadow:0 0 0 2px #f7ca60; }
+.progress-step:focus-visible { outline-offset:0; border-radius:20px; }
+.scene .skip-button { top:54px; }
+.start-assumptions { font-size:14px; line-height:1.6; margin:12px 0; }
+.result-panel { padding:20px; }
+.spectator-hud { padding:8px 12px; flex:none; position:relative; }
+.spectator-hud .profile-guide,.spectator-choice { display:none; }
+.spectator-heading { font-size:14px; margin-bottom:6px; }
+.spectator-controls { gap:6px; }
+.spectator-controls button { min-height:36px; padding:6px 10px; font-size:13px; }
+#spectatorComparison { position:absolute; right:12px; top:8px; z-index:18; font-size:13px; }
+#spectatorComparison summary { padding:3px 6px; background:#fafbf6; border-radius:6px; }
+#spectatorComparison[open] { padding:10px; width:min(600px,calc(100vw - 40px)); max-height:50dvh; overflow:auto; background:#fafbf6; border:1px solid #b9cbb9; border-radius:12px; box-shadow:0 12px 40px #20302633; }
+.spectator-heading { padding-right:210px; }
+.model-dock { position:absolute; z-index:8; left:10px; top:56px; bottom:132px; width:clamp(128px,20%,220px); overflow:auto; padding:3px; display:flex; flex-direction:column; gap:7px; }
+.model-card { position:relative; padding:10px; border:1px solid #b5c7b6; border-radius:12px; background:rgba(250,252,248,.96); color:#203026; flex:none; }
+.model-card-name { display:block; font-size:14px; overflow-wrap:anywhere; }
+.model-card.is-active { border:2px solid #3b6950; box-shadow:0 3px 10px #20302622; }
+.model-card-choice { display:none; width:24px; height:24px; border-radius:50%; color:#fff; text-align:center; font-weight:800; line-height:24px; margin-bottom:6px; }
+.model-card.answer-a .model-card-choice { display:block; background:#2259b2; }
+.model-card.answer-b .model-card-choice { display:block; background:#ab393a; margin-left:auto; }
+.model-bubble { position:relative; margin:5px 0 0; border-radius:10px; border:1px solid #b8c9ba; padding:8px; background:white; font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
+.answer-a .model-bubble { border-top-left-radius:0; }
+.answer-b .model-bubble { border-top-right-radius:0; }
+.model-rider { position:absolute; z-index:9; top:38%; left:50%; transform:translateX(-50%); padding:6px 10px; border:2px solid #f5faf1; border-radius:8px; background:#31563d; color:white; font-size:clamp(11px,1.1vw,15px); font-weight:800; max-width:90%; text-align:center; overflow-wrap:anywhere; }
+.model-rider.is-boarding { animation:model-board .55s ease-out; }
+@keyframes model-board { from { transform:translate(-230%,-60%) scale(.7); opacity:.25; } to { transform:translate(-50%,0) scale(1); opacity:1; } }
+.target-left.is-launched { animation:target-fly-left .65s ease-in forwards; }
+.target-right.is-launched { animation:target-fly-right .65s ease-in forwards; }
+@keyframes target-fly-left { from { transform:translateX(var(--off)) rotate(0); opacity:1; } to { transform:translate(calc(var(--off) - 24cqw),-26cqh) rotate(-150deg) scale(.5); opacity:0; } }
+@keyframes target-fly-right { from { transform:translateX(calc(var(--off) * -1)) rotate(0); opacity:1; } to { transform:translate(calc(var(--off) * -1 + 24cqw),-26cqh) rotate(150deg) scale(.5); opacity:0; } }
+.config-lead { font-size:16px; font-weight:700; color:#3f5946; }
+#spectatorConfig .result-panel { width:min(780px,100%); }
+#spectatorModels { max-height:140px; }
+.spectator-settings { margin:10px 0; gap:10px; }
+.advanced-settings { border:1px solid #c4d1bf; border-radius:10px; padding:10px; }
+.advanced-settings[open] { display:grid; gap:10px; }
+#spectatorCount { font-weight:800; margin:10px 0; }
+#spectatorPersonal { font-size:12px; margin:4px 0; }
+@media(max-width:650px) {
+ .app-shell { gap:6px; padding:6px; }
+ .topbar { flex-wrap:nowrap; gap:6px; }
+ .brand-home { gap:5px; }
+ .brand-title { font-size:14px; }
+ .brand-mark { width:24px; height:24px; }
+ .options-button { padding:7px 9px; font-size:12px; flex:none; }
+ .question-card { max-height:31dvh; padding:10px; }
+ .question-body { font-size:15px; }
+ .question-note,.common-assumptions { font-size:12px; }
+ .scene { min-height:280px; }
+ .ride-bar { gap:5px; left:5px; right:5px; }
+ .ride-bar .ride-caption { font-size:11px; padding:6px; }
+ .question-steps { padding:4px; }
+ .progress-step { width:17px; }
+ .progress-step::before { left:1px; right:1px; height:13px; }
+ .progress-step:not(:last-child)::after { left:12px; width:8px; }
+ .spectator-heading { font-size:12px; padding-right:0; }
+ #spectatorComparison { position:static; margin-top:4px; }
+ #spectatorComparison[open] { position:absolute; top:100%; left:0; width:100%; }
+ .spectator-controls { overflow-x:auto; }
+ .model-dock { left:5px; top:50px; width:112px; bottom:130px; }
+ .model-card { padding:7px; }
+ .model-card-name { font-size:12px; }
+ .model-bubble { padding:6px; font-size:12px; }
+ .model-rider { top:38%; padding:4px 6px; }
+}
+@media(max-height:620px) { .app-shell { height:auto; min-height:100dvh; overflow:visible; } .scene { flex:none; height:360px; } .question-card { max-height:none; } }
+@media(prefers-reduced-motion:reduce) { .model-rider.is-boarding,.target.is-launched { animation:none !important; } .target.is-launched { opacity:0; } }
+/* モデル枠を画面上端の帯にまとめ、狭い画面でも人型を覆わない。 */
+.model-dock { position:static; width:auto; max-height:150px; overflow:auto; display:flex; flex-direction:row; gap:7px; margin-top:7px; padding:2px; align-items:stretch; }
+.model-card { flex:1 0 150px; min-width:0; padding:8px 10px; }
+.model-card-name { padding-right:26px; }
+.model-card-choice { position:absolute; top:6px; right:7px; margin:0; }
+.model-card.answer-a .model-card-choice { left:7px; right:auto; }
+.model-card.answer-a .model-card-name { padding-left:28px; padding-right:0; }
+.model-bubble { max-height:72px; overflow:auto; }
+@media(max-width:650px) {
+ .model-dock { width:auto; max-height:128px; margin-top:4px; gap:5px; }
+ .model-card { flex:1 0 96px; padding:7px; }
+ .model-card-name { font-size:12px; }
+ .model-card-choice { width:20px; height:20px; font-size:12px; line-height:20px; }
+ .model-bubble { max-height:60px; }
+ .is-spectating .question-card { max-height:22dvh; }
+ .is-spectating .scene { min-height:220px; }
+}
+/* 拡大表示や短い画面ではスクロールで全操作に到達できるようにする。 */
+.app-shell { overflow:auto; }

@@ -5,9 +5,10 @@
     const $ = id => doc.getElementById(id);
     const buttons = {left:doc.querySelector('.choice-left'),right:doc.querySelector('.choice-right')};
     const overlays = [...doc.querySelectorAll('.result-overlay')];
-    const activeOverlay = () => $('optionsOverlay').classList.contains('is-visible') ? $('optionsOverlay') : overlays.find(o => o.classList.contains('is-visible'));
+    let modalOrder = [];
+    const activeOverlay = () => modalOrder[modalOrder.length-1];
     const visibleFocusables = element => [...element.querySelectorAll('button:not(:disabled), input, select, summary, [tabindex="0"]')].filter(n => n.getClientRects().length && !n.closest('[hidden]'));
-    let onChoose = () => {}, onModelSelect = () => {}, optionsFocus = null;
+    let onChoose = () => {}, onModelSelect = () => {}, onOptionsOpen = () => {}, optionsFocus = null;
     const node = (tag,cls,text) => { const n = doc.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
     const append = (parent,tag,cls,text) => { const n = node(tag,cls,text); parent.append(n); return n; };
     function syncModal() {
@@ -16,7 +17,7 @@
       doc.body.classList.toggle('modal-open',Boolean(top));
       overlays.forEach(o => { o.inert = o !== top; o.setAttribute('aria-hidden',String(o !== top)); });
     }
-    function setOverlay(o,on) { o.classList.toggle('is-visible',on); syncModal(); }
+    function setOverlay(o,on) { modalOrder = modalOrder.filter(item => item !== o); if(on)modalOrder.push(o); o.classList.toggle('is-visible',on); syncModal(); }
     function focusHeading() { $('questionTitle').focus({preventScroll:true}); $('questionTitle').scrollIntoView({block:'start'}); }
     function closeOptions() {
       setOverlay($('optionsOverlay'),false);
@@ -99,8 +100,9 @@
       renderProfile(vm.profile);
       $('resultDisclaimer').textContent = vm.disclaimer;
       $('nextAction').hidden = vm.primaryLabel == null; $('nextButton').hidden = vm.primaryLabel == null; $('nextButton').textContent = vm.primaryLabel || '';
-      $('restartButton').textContent = vm.restartLabel; $('homeButton').hidden = !vm.isSummary;
+      $('restartButton').hidden = vm.restartLabel == null; $('restartButton').textContent = vm.restartLabel || ''; $('homeButton').hidden = !(vm.showHome || vm.isSummary);
       $('resultOverlay').classList.toggle('is-summary',vm.isSummary);
+      $('watchResultButton').hidden = vm.isSummary || Boolean(vm.isSpectator);
     }
     Object.entries(buttons).forEach(([position,b]) => b.addEventListener('click',() => {
       if (!activeOverlay() && !b.disabled) onChoose({optionId:b.dataset.optionId,position});
@@ -123,17 +125,29 @@
     syncModal();
     const bind = (id,fn) => $(id).addEventListener('click',fn);
     return {
+      openPanel(id) { setOverlay($(id),true); $(id).querySelector('.result-panel').focus({preventScroll:true}); },
+      closePanel(id) { setOverlay($(id),false); const top=activeOverlay(); if(top)top.querySelector('.result-panel').focus({preventScroll:true}); },
+      onWatch(fn) { bind('watchButton',fn); },
+      onWatchQuestion(fn) { bind('watchResultButton',fn); },
+      onBrandHome(fn) { bind('brandHome',fn); },
+      onProgress(fn) { $('questionSteps').addEventListener('click',e=>{const button=e.target.closest('[data-step]');if(button)fn(Number(button.dataset.step));}); },
+      onOptionsOpen(fn) { onOptionsOpen=fn; },
       onChoose(fn) { onChoose = fn; }, onModelSelect(fn) { onModelSelect = fn; },
       onNext(fn) { bind('nextButton',fn); }, onRestart(fn) { bind('restartButton',fn); }, onHome(fn) { bind('homeButton',fn); },
       onStart(fn) { bind('startButton',fn); }, onStartRestart(fn) { bind('startRestartButton',fn); }, onSkip(fn) { bind('skipButton',fn); },
-      bindOptions(getSettings,fn) {
+      bindOptions(getSettings,fn,onRandom) {
         [$('optionsButton'), ...doc.querySelectorAll('[data-open-options]')].forEach(button => button.addEventListener('click',() => {
-          optionsFocus = doc.activeElement; $('skipToggle').checked = getSettings().skipAnimation;
+          onOptionsOpen(); optionsFocus = doc.activeElement; $('skipToggle').checked = getSettings().skipAnimation; $('randomToggle').checked = getSettings().randomQuestions;
           setOverlay($('optionsOverlay'),true); $('skipToggle').focus({preventScroll:true});
         }));
         $('skipToggle').addEventListener('change',() => fn($('skipToggle').checked));
+        $('randomToggle').addEventListener('change',()=>onRandom($('randomToggle').checked));
       },
       setInstructions(text) { $('startInstructions').textContent = text; $('commonInstructions').textContent = text; },
+      renderProgress({index,answered,labels}) {
+        $('questionSteps').replaceChildren(...answered.map((done,i)=>{const b=node('button','progress-step'+(done?' is-done':'')+(i===index?' is-current':''));b.type='button';b.dataset.step=String(i);b.setAttribute('aria-label',`第${labels?labels[i]:i+1}問・${done?'回答済み':'未回答'}`);if(i===index)b.setAttribute('aria-current','step');b.title=`第${labels?labels[i]:i+1}問`;return b;}));
+      },
+      markChoice(optionId) { Object.values(buttons).forEach(b=>{b.classList.toggle('is-selected',b.dataset.optionId===optionId);b.setAttribute('aria-pressed',String(b.dataset.optionId===optionId));}); },
       renderQuestion(vm,{focus = false} = {}) {
         $('progressPill').textContent = vm.progress; $('progressPill').setAttribute('aria-label',vm.progressLabel);
         $('questionNumber').textContent = vm.number; $('questionTitle').textContent = vm.title; $('questionBody').textContent = vm.body; $('questionNote').textContent = vm.note;
@@ -146,6 +160,7 @@
           b.querySelector('.choice-copy strong').textContent = vm.text; b.querySelector('.choice-copy small').textContent = `選択肢 ${vm.code}`;
         });
       },
+      setChoiceHints(hints) { Object.entries(buttons).forEach(([side,b])=>{b.querySelector('.choice-copy small').textContent=hints[side];}); },
       lockChoices(optionId) { Object.values(buttons).forEach(b => { b.disabled = true; b.classList.toggle('is-selected',b.dataset.optionId === optionId); b.setAttribute('aria-pressed',String(b.dataset.optionId === optionId)); }); },
       showStart(vm) {
         doc.body.classList.add('is-start'); $('startButton').textContent = vm.primaryLabel; $('startRestartButton').hidden = !vm.canRestart;

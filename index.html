@@ -11,13 +11,13 @@
 <body>
   <main class="app-shell" id="appMain">
     <header class="topbar">
-      <div class="brand-mark" aria-hidden="true">
+      <button id="brandHome" class="brand-home" type="button" aria-label="スタート画面に戻る"><span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 48 48" role="presentation"><path d="M11 10h26v22H11z"/><path d="M16 10V6h16v4M15 17h18M15 23h18M15 29h18M8 37l7-5m18 0 7 5M16 39l2-7m12 7-2-7"/><circle cx="17" cy="34" r="3"/><circle cx="31" cy="34" r="3"/></svg>
-      </div>
-      <div class="brand-copy">
-        <p class="eyebrow">倫理的ジレンマ診断</p>
-        <h1>価値判断AIマッチング</h1>
-      </div>
+      </span>
+      <span class="brand-copy">
+        <span class="eyebrow">倫理的ジレンマ診断</span>
+        <span class="brand-title">価値判断AIマッチング</span>
+      </span></button>
       <div class="progress-pill" id="progressPill" aria-label="全10問中1問目">QUESTION 1 / 10</div>
       <button class="options-button" id="optionsButton" type="button">オプション</button>
     </header>
@@ -32,6 +32,18 @@
       </div>
     </section>
 
+    <section id="spectatorHud" class="spectator-hud" aria-label="AI回答の観戦" hidden>
+      <div class="spectator-heading"><strong id="spectatorStatus" role="status"></strong><span id="spectatorPosition"></span></div>
+      <p id="spectatorNotice" class="profile-guide"></p>
+      <div class="spectator-controls" role="group" aria-label="再生操作">
+        <button id="spectatorPrevious" type="button">前へ</button><button id="spectatorPlay" type="button">再生</button>
+        <button id="spectatorNext" type="button">次へ</button><button id="spectatorSkip" type="button">この演出をスキップ</button>
+        <button id="spectatorConfigure" type="button">観戦の設定</button><button id="spectatorEnd" type="button">観戦を終了</button>
+      </div>
+      <aside id="modelDock" class="model-dock" aria-label="観戦中のモデル" hidden></aside>
+      <p id="spectatorChoice" class="spectator-choice"></p>
+      <details id="spectatorComparison"><summary>この問題のAI回答を比較する</summary><p id="spectatorDistribution"></p><div id="spectatorTable" class="spectator-table"></div></details>
+    </section>
     <section class="scene is-running" id="scene" aria-label="原っぱの中を走るトロッコの一人称視点">
       <div class="world-layer" id="worldLayer" aria-hidden="true">
         <div class="scene-sky"></div>
@@ -70,15 +82,17 @@
       <div class="trolley-stage" id="trolleyStage" aria-hidden="true">
         <div class="spark-layer spark-layer-left" id="sparkLeft"></div>
         <div class="spark-layer spark-layer-right" id="sparkRight"></div>
+        <div class="model-rider" id="modelRider" hidden></div>
         <img class="trolley" id="trolley" src="trolley.svg" alt="" draggable="false" />
         <div class="impact-effect" id="impactEffect"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
 
-      <div class="ride-caption" aria-live="polite">
+      <div class="ride-bar"><div class="ride-caption" aria-live="polite">
         <span class="status-dot"></span>
         <span id="sceneStatus">ガタン、ゴトン……トロッコは原っぱを進んでいます</span>
       </div>
 
+      <nav id="questionSteps" class="question-steps" aria-label="問題への移動"></nav></div>
       <button class="skip-button" id="skipButton" type="button">演出をスキップ</button>
 
       <div class="choices" id="choices" role="group" aria-label="回答選択">
@@ -109,6 +123,7 @@
           <p class="result-disclaimer" id="resultDisclaimer">一致率は今回の問題に対する回答の一致割合です。倫理的な優劣を表すものではありません。</p>
           <div class="result-next" id="nextAction"><button class="next-button" type="button" id="nextButton">次の問題へ</button></div>
           <button class="restart-button" type="button" id="restartButton">診断を最初からやり直す</button>
+          <button class="restart-button" type="button" id="watchResultButton" hidden>この問題のAIの回答を観戦する</button>
           <button class="restart-button" type="button" id="homeButton" hidden>スタート画面に戻る</button>
           <button class="text-button" type="button" data-open-options>オプション</button>
         </section>
@@ -119,11 +134,12 @@
           <div class="result-kicker">倫理的ジレンマ診断</div>
           <h2 id="startTitle">価値判断AIマッチング</h2>
           <p class="start-lead">10の架空場面での選択を、6つの観点から振り返ります。回答ごとにAIとの共通点を確認し、最後に全体の傾向を振り返ります。</p>
-          <div class="common-instructions" id="startInstructions"></div>
+          <details class="start-assumptions"><summary>回答する前に：場面の共通ルール</summary><div class="common-instructions" id="startInstructions"></div></details>
           <p class="result-disclaimer">左右の選択肢をクリック、または ← → キーで回答します。各回答後にAIとの一致率、全10問の回答後にプロフィールを表示します。</p>
           <p class="data-notice">AIの回答は架空のサンプルです。実在するAIの測定結果ではありません。一致度は人格全体や倫理的な優劣を示しません。</p>
           <p class="restore-notice" id="restoreNotice" hidden></p>
           <button class="next-button" type="button" id="startButton">診断をはじめる</button>
+          <button class="restart-button" type="button" id="watchButton">AIの回答を観戦する</button>
           <button class="restart-button" type="button" id="startRestartButton" hidden>最初からやり直す</button>
           <button class="text-button" type="button" data-open-options>オプション</button>
         </section>
@@ -136,16 +152,46 @@
             <span><strong>演出をスキップ</strong><small>回答後のトロッコの演出を省略して、すぐに回答確認を表示します。設定はこのブラウザに保存されます。</small></span>
             <input type="checkbox" id="skipToggle" role="switch" />
           </label>
+          <label class="option-row"><span><strong>問題をランダムにする</strong><small>OFFでは決まった順番で出題します。変更は次に「最初からやり直す」を選んだときに反映されます。</small></span><input type="checkbox" id="randomToggle" role="switch" /></label>
           <p class="result-disclaimer">一致度は、この10場面での選択の近さを示します。倫理的な優劣を示しません。AIの回答は架空のサンプルです。</p>
           <button class="next-button" type="button" id="optionsClose">閉じる</button>
         </section>
       </div>
 
+  <div class="result-overlay" id="spectatorConfig" aria-hidden="true">
+    <section class="result-panel" role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="spectatorConfigTitle">
+      <h2 id="spectatorConfigTitle" tabindex="-1">AIの回答を観戦する</h2>
+      <p class="config-lead">① AIを選ぶ → ② 見方を選ぶ → 観戦スタート</p>
+      <p class="data-notice" id="spectatorSource"></p>
+      
+      <fieldset class="spectator-models"><legend>① 観戦するAI</legend><div id="spectatorModels"></div></fieldset>
+      <div class="spectator-settings">
+        <label>② 見方を選ぶ<select id="spectatorMode"><option value="normal">じっくり：1モデルずつ演出で見る</option><option value="fast">一覧：その問題の全モデルを比べる</option></select></label>
+        <details class="advanced-settings"><summary>詳しい設定：再生順・絞り込み</summary>
+        <label>再生する順番<select id="spectatorOrder"><option value="question">問題ごとにAIを交代</option><option value="model">AIごとに10問を再生</option></select></label>
+        <p class="profile-guide">一覧表示は問題順です。端末の「動きを減らす」がONのときも一覧表示になります。</p>
+        <label>回答の絞り込み<select id="spectatorFilter"><option value="all">すべて</option><option value="match">自分と一致</option><option value="different">自分と不一致</option><option value="split">AI間で判断が分かれた問題</option><option value="unanimous">選択したAI全員が一致した問題</option></select></label>
+        </details>
+        <label class="spectator-check"><input id="spectatorAuto" type="checkbox">自動で次へ進む（OFFなら自分のペースで操作）</label>
+      </div>
+      <p id="spectatorCount" role="status"></p><p id="spectatorPersonal" class="profile-guide"></p>
+      <button id="spectatorClearFilter" type="button" class="text-button">絞り込みを解除する</button>
+      <button id="spectatorDiagnose" type="button" class="restart-button">スタート画面に戻る</button>
+      <button id="spectatorBegin" type="button" class="next-button">観戦をはじめる</button>
+      <button id="spectatorConfigClose" type="button" class="restart-button">戻る</button>
+      <details class="profile-details"><summary>AI回答の出典と条件</summary><div id="spectatorSources"></div></details>
+      <p class="result-disclaimer">一致率は、この問題での選択の近さです。人格全体や倫理的な優劣を示しません。</p>
+    </section>
+  </div>
   <script src="app-core.js" defer></script>
   <script src="model-data.js" defer></script>
   <script src="value-profile.js" defer></script>
   <script src="store.js" defer></script>
   <script src="presenter.js" defer></script>
+  <script src="playback-clock.js" defer></script>
+  <script src="spectator.js" defer></script>
+  <script src="text-replay.js" defer></script>
+  <script src="spectator-view.js" defer></script>
   <script src="scene.js" defer></script>
   <script src="view.js" defer></script>
   <script src="app.js" defer></script>

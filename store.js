@@ -16,11 +16,12 @@
       clear() { try { localStorage.removeItem(key); } catch (e) { available = false; } },
     };
   }
-  function create({ core, adapter, rng = Math.random }) {
+  function create({ core, adapter, rng = Math.random, randomQuestions = true }) {
     const { QUESTIONS, QUESTION_VERSION, findOption } = core;
+    let randomOrder = randomQuestions;
     let index = 0, answers = {}, order = [], placements = {}, restoreNotice = '';
     function fresh() {
-      index = 0; answers = {}; order = core.createQuestionOrder(rng);
+      index = 0; answers = {}; order = randomOrder ? core.createQuestionOrder(rng) : QUESTIONS.map(q=>q.id);
       placements = Object.fromEntries(QUESTIONS.map(q => [q.id, core.createPlacement(q)]));
     }
     function payload() { return { questionVersion: QUESTION_VERSION, questionOrder: order, placements, answers, updatedAt: new Date().toISOString() }; }
@@ -44,19 +45,21 @@
       get answers() { return clone(answers); }, get order() { return [...order]; },
       get restoreNotice() { return restoreNotice; }, get storageAvailable() { return adapter.available !== false; },
       question, placement(id = question().id) { return { ...placements[id] }; },
-      isLast() { return Object.keys(answers).length === QUESTIONS.length; },
+      isLast() { return index === QUESTIONS.length - 1 && Object.keys(answers).length === QUESTIONS.length; },
       isComplete() { return QUESTIONS.every(q => answers[q.id]); },
       snapshot() { return clone(payload()); },
+      setRandomQuestions(value) { randomOrder = value === true; },
+      goTo(nextIndex) { if (!Number.isInteger(nextIndex) || nextIndex < 0 || nextIndex >= order.length) return false; index = nextIndex; return true; },
       answer(optionId, position) {
         const q = question();
-        if (!q || answers[q.id] || !findOption(q,optionId) || !['left','right'].includes(position) || placements[q.id][position] !== optionId) return null;
+        if (!q || !findOption(q,optionId) || !['left','right'].includes(position) || placements[q.id][position] !== optionId) return null;
         const record = { question_id:q.id, question_version:q.version, selected_option_id:optionId,
           display_position:position, displayed_index:index, option_order:{ ...placements[q.id] }, response_timestamp:new Date().toISOString() };
         answers[q.id] = record; persist(); return clone(record);
       },
       advance() {
         if (!answers[question().id]) return false;
-        const next = order.findIndex(id => !answers[id]);
+        const next = index < order.length - 1 ? index + 1 : order.findIndex(id => !answers[id]);
         if (next === -1) return false;
         index = next; return true;
       },
@@ -86,9 +89,9 @@
     };
   }
   function createSettings(adapter) {
-    const saved = adapter.load(); let skipAnimation = Boolean(saved && saved.skipAnimation === true);
-    return { get skipAnimation() { return skipAnimation; }, get storageAvailable() { return adapter.available !== false; },
-      set(key,value) { if (key === 'skipAnimation') { skipAnimation = value === true; adapter.save({ skipAnimation }); } } };
+    const saved = adapter.load(); let skipAnimation = Boolean(saved && saved.skipAnimation === true), randomQuestions = Boolean(saved && saved.randomQuestions === true);
+    return { get skipAnimation() { return skipAnimation; }, get randomQuestions() { return randomQuestions; }, get storageAvailable() { return adapter.available !== false; },
+      set(key,value) { if (key === 'skipAnimation') skipAnimation = value === true; else if (key === 'randomQuestions') randomQuestions = value === true; else return; adapter.save({ skipAnimation, randomQuestions }); } };
   }
   return { KEYS, create, createSettings, localStorageAdapter };
 });
