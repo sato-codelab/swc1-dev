@@ -2,7 +2,7 @@
 (function(root,factory){const api=factory(typeof module==='object'&&module.exports?require('./playback-clock'):root.AppPlaybackClock);if(typeof module==='object'&&module.exports)module.exports=api;else root.AppSpectator=api;})(typeof globalThis!=='undefined'?globalThis:this,function(clocks){
   'use strict';
   const FILTERS={all:'すべて',match:'自分と一致',different:'自分と不一致',split:'AI間で判断が分かれた問題',unanimous:'選択したAI全員が一致した問題'};
-  const TIMINGS={intro:700,result:1800,fast:3500};
+  const TIMINGS={intro:700,arrival:560,result:2400,fast:3500};
   function settings(input,models){const s=input||{};return {modelIds:Array.isArray(s.modelIds)?models.filter(m=>s.modelIds.includes(m.id)).map(m=>m.id):models.map(m=>m.id),mode:s.mode==='fast'?'fast':'normal',order:s.order==='model'?'model':'question',filter:Object.hasOwn(FILTERS,s.filter)?s.filter:'all',autoplay:s.autoplay!==false};}
   function buildPlan({core,modelData,models,snapshot,config,scopeIds=null}) {
     const selection=models.filter(m=>config.modelIds.includes(m.id));
@@ -34,10 +34,11 @@
   function create({core,modelData,models,scene,readSnapshot,adapter,emit,clock=clocks.create()}) {
     let config=settings(adapter.load(),models),plan=null,index=0,state='idle',phase='intro',generation=0;
     const seen=new Map();
-    const frame=()=>emit({type:'frame',plan,index,state,phase,entry:plan.queue[index],seenQuestionIds:[...new Set([...seen.values()].map(e=>e.questionId))]});
+    const completedQuestionIds=()=>plan.questionIds.filter(id=>plan.entries.filter(e=>e.questionId===id).every(e=>seen.has(`${id}/${e.modelId}`)));
+    const frame=()=>emit({type:'frame',plan,index,state,phase,presentationId:generation,entry:plan.queue[index],seenQuestionIds:[...new Set([...seen.values()].map(e=>e.questionId))],completedQuestionIds:completedQuestionIds()});
     function clear(){generation++;clock.cancel();scene.reset();}
     function complete(){clear();state='completed';emit({type:'complete',plan,seen:[...seen.values()]});}
-    function result(){phase='result';plan.queue[index].entries.forEach(e=>seen.set(`${e.questionId}/${e.modelId}`,e));state=config.autoplay?'playing':'ready';frame();if(config.autoplay)clock.later(next,config.mode==='fast'?TIMINGS.fast:Math.max(TIMINGS.result, Array.from(plan.queue[index].reason||'').length*35+1500));}
+    function result(){phase='result';plan.queue[index].entries.forEach(e=>seen.set(`${e.questionId}/${e.modelId}`,e));state=config.autoplay?'playing':'ready';frame();if(config.autoplay)clock.later(next,config.mode==='fast'?TIMINGS.fast:Math.max(TIMINGS.result, TIMINGS.arrival+Array.from(plan.queue[index].reason||'').length*35+1500));}
     function animate(){phase='animation';frame();const token=generation;const item=plan.queue[index];scene.playChoice(core.positionFor(core.createPlacement(core.QUESTIONS.find(q=>q.id===item.questionId)),item.optionId),()=>{if(token===generation&&state==='playing')result();});}
     function display(run){clear();scene.setTheme(core.QUESTIONS.find(q=>q.id===plan.queue[index].questionId).sceneTheme);phase='intro';state=run?'playing':'ready';frame();if(config.mode==='fast'){result();return;}if(run)clock.later(animate,TIMINGS.intro);}
     function next(){if(!plan||state==='completed'||state==='idle')return;if(index+1>=plan.queue.length){complete();return;}index++;display(true);}
@@ -49,7 +50,7 @@
       play(){if(!plan||state==='completed')return;if(state==='paused'){state='playing';scene.resume();clock.resume();frame();}else if(state==='ready'){if(phase==='result')next();else{state='playing';frame();clock.later(animate,TIMINGS.intro);}}},
       toggle(){if(state==='playing')this.pause();else this.play();},
       next,
-      jumpToQuestion(ordinal){if(!plan||!Number.isInteger(ordinal)||!plan.questionIds[ordinal])return;index=plan.queue.findIndex(e=>e.questionId===plan.questionIds[ordinal]);display(true);},
+      jumpToQuestion(ordinal){if(!plan||!Number.isInteger(ordinal)||!completedQuestionIds().includes(plan.questionIds[ordinal]))return;index=plan.queue.findIndex(e=>e.questionId===plan.questionIds[ordinal]);display(true);},
       previous(){if(!plan||!index||state==='completed')return;index--;display(true);},
       skip(){if(!plan||config.mode==='fast'||phase==='result'||state==='completed')return;clock.cancel();scene.reset();state='playing';result();},
       end(){if(plan&&state!=='completed')complete();},

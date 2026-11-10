@@ -130,7 +130,7 @@
       onWatch(fn) { bind('watchButton',fn); },
       onWatchQuestion(fn) { bind('watchResultButton',fn); },
       onBrandHome(fn) { bind('brandHome',fn); },
-      onProgress(fn) { $('questionSteps').addEventListener('click',e=>{const button=e.target.closest('[data-step]');if(button)fn(Number(button.dataset.step));}); },
+      onProgress(fn) { $('questionSteps').addEventListener('click',e=>{const button=e.target.closest('[data-step]');if(button&&!button.disabled)fn(Number(button.dataset.step));}); },
       onOptionsOpen(fn) { onOptionsOpen=fn; },
       onChoose(fn) { onChoose = fn; }, onModelSelect(fn) { onModelSelect = fn; },
       onNext(fn) { bind('nextButton',fn); }, onRestart(fn) { bind('restartButton',fn); }, onHome(fn) { bind('homeButton',fn); },
@@ -145,7 +145,16 @@
       },
       setInstructions(text) { $('startInstructions').textContent = text; $('commonInstructions').textContent = text; },
       renderProgress({index,answered,labels}) {
-        $('questionSteps').replaceChildren(...answered.map((done,i)=>{const b=node('button','progress-step'+(done?' is-done':'')+(i===index?' is-current':''));b.type='button';b.dataset.step=String(i);b.setAttribute('aria-label',`第${labels?labels[i]:i+1}問・${done?'回答済み':'未回答'}`);if(i===index)b.setAttribute('aria-current','step');b.title=`第${labels?labels[i]:i+1}問`;return b;}));
+        const host=$('questionSteps');
+        host.replaceChildren(...answered.map((done,i)=>{
+          const b=node('button','progress-step'+(done?' is-done':'')+(i===index?' is-current':'')+(done&&answered[i+1]?' is-passed':''));
+          const number=labels?labels[i]:i+1;
+          b.type='button';b.dataset.step=String(i);b.disabled=!done;
+          b.setAttribute('aria-label',`第${number}問・${done?'回答済み、この問題に戻る':'未回答、まだ移動できません'}`);
+          b.title=`第${number}問${done?'に戻る':'（未回答）'}`;
+          if(i===index){b.setAttribute('aria-current','step');const cart=node('span','progress-cart');cart.setAttribute('aria-hidden','true');b.append(cart);}
+          return b;
+        }));
       },
       markChoice(optionId) { Object.values(buttons).forEach(b=>{b.classList.toggle('is-selected',b.dataset.optionId===optionId);b.setAttribute('aria-pressed',String(b.dataset.optionId===optionId));}); },
       renderQuestion(vm,{focus = false} = {}) {

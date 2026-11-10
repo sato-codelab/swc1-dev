@@ -392,93 +392,152 @@ summary { cursor:pointer; font-weight:700; }
 #sceneStatus { min-width:0; overflow:hidden; text-overflow:ellipsis; }
 .result-next { position:sticky; bottom:-1px; padding:12px 0; background:#f9faf6; z-index:1; }
 
-/* 観戦操作はシーンの外側に配置し、人型・車輪・選択肢を覆わない。 */
-.spectator-hud { width:min(1280px,100%); margin:0 auto; padding:14px 18px; border:1px solid #bccbb9; border-radius:16px; background:#fafbf6; }
-.spectator-heading { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap; }
-.spectator-controls { display:flex; gap:8px; flex-wrap:wrap; }
-.spectator-controls button { padding:9px 13px; min-height:44px; border:1px solid #8fa58f; border-radius:9px; background:#fff; color:#203026; cursor:pointer; }
-.spectator-controls button:disabled { opacity:.5; cursor:default; }
-.spectator-choice { font-size:15px; line-height:1.7; }
-.spectator-table { max-height:240px; overflow:auto; overscroll-behavior:contain; }
-.spectator-answer { padding:12px 0; border-top:1px solid #cbd6c7; display:grid; gap:5px; font-size:15px; line-height:1.6; }
-.spectator-answer small { color:#46564b; font-size:13px; }
-.spectator-settings { display:grid; gap:12px; margin:16px 0; }
-.spectator-settings label:not(.spectator-check) { display:grid; gap:8px; }
-.spectator-settings select { width:100%; font:inherit; padding:10px; color:#203026; background:#fff; border:1px solid #92a78f; border-radius:8px; }
-.spectator-models { border:1px solid #bccbb9; border-radius:10px; padding:12px; }
-#spectatorModels { max-height:200px; overflow:auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:6px; }
-.spectator-check { display:flex; align-items:center; gap:10px; min-height:44px; }
-.spectator-check input { width:20px; height:20px; accent-color:#3a6041; }
-#spectatorBegin:disabled { background:#d5dad4; color:#586458; cursor:default; }
-.scene.is-paused *, .scene.is-paused *::before, .scene.is-paused *::after { animation-play-state:paused !important; }
-.is-spectating .scene .skip-button { display:none; }
-@media(max-width:650px) { .spectator-hud { padding:12px; } .spectator-controls { flex-wrap:nowrap; overflow-x:auto; padding:4px 2px; } .spectator-controls button { flex:none; } }
-
-/* 画面内で読み進められる配置。小さい画面や拡大時は領域内スクロールを許可する。 */
+/* 画面の余白と操作時のフォーカス。 */
 [tabindex="-1"]:focus { outline:none; }
 button:focus:not(:focus-visible), select:focus:not(:focus-visible) { outline:none; }
-button:focus-visible, summary:focus-visible, select:focus-visible { outline:3px solid #648b70; outline-offset:3px; }
+button:focus-visible, summary:focus-visible, select:focus-visible, #modelSpeechText:focus-visible { outline:3px solid #648b70; outline-offset:3px; }
+.sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; border:0; }
 .brand-home { display:flex; align-items:center; gap:10px; border:0; padding:0; background:none; color:inherit; text-align:left; cursor:pointer; min-width:0; }
 .brand-copy,.eyebrow { display:block; }
 .brand-title { display:block; font-size:clamp(14px,1.55vw,20px); font-weight:800; line-height:1.3; }
 #progressPill { display:none; }
 .options-button { margin-left:auto; }
-.app-shell { height:100dvh; min-height:0; overflow:hidden; gap:8px; padding-bottom:8px; }
+.app-shell { height:100dvh; min-height:0; overflow:auto; gap:8px; padding-bottom:8px; }
 .question-card { max-height:30dvh; overflow:auto; flex-shrink:0; }
 .question-body { margin-top:6px; font-size:clamp(15px,1.15vw,17px); line-height:1.65; max-width:none; }
 .question-card h2 { font-size:clamp(19px,1.8vw,24px); }
 .question-number { margin-bottom:3px; }
 .question-note { margin-top:5px; }
 .common-assumptions { margin-top:4px; }
-.scene { flex:1 1 auto; height:auto; min-height:260px; }
+.scene { flex:1 1 auto; height:auto; min-height:280px; }
 .page-foot { font-size:11px; }
 .page-foot span { display:none; }
-.ride-bar { position:absolute; z-index:12; top:8px; left:10px; right:10px; display:flex; align-items:center; gap:12px; padding-right:0; }
-.ride-bar .ride-caption { position:static; transform:none; min-width:0; max-width:none; flex:1; font-size:12px; }
-.question-steps { display:flex; align-items:center; flex:none; gap:0; padding:6px 8px; border-radius:30px; background:rgba(249,252,246,.95); }
-.progress-step { position:relative; width:22px; height:26px; padding:0; border:0; background:none; cursor:pointer; }
-.progress-step::before { content:''; position:absolute; left:1px; right:1px; top:6px; height:14px; border:2px solid #66806c; border-radius:50%; background:#f7faf3; z-index:1; }
-.progress-step:not(:last-child)::after { content:''; position:absolute; top:11px; left:16px; width:12px; height:5px; background:#66806c; }
-.progress-step.is-done::before { background:#436d50; }
-.progress-step.is-current::before { border:3px solid #203e2c; box-shadow:0 0 0 2px #f7ca60; }
-.progress-step:focus-visible { outline-offset:0; border-radius:20px; }
-.scene .skip-button { top:54px; }
-.start-assumptions { font-size:14px; line-height:1.6; margin:12px 0; }
 .result-panel { padding:20px; }
-.spectator-hud { padding:8px 12px; flex:none; position:relative; }
+.start-assumptions { font-size:14px; line-height:1.6; margin:12px 0; }
+
+/* 進捗は枕木と二本のレール。通過した駅だけ選択できる。 */
+.ride-bar { position:absolute; z-index:12; top:8px; left:10px; right:10px; display:flex; justify-content:center; align-items:center; gap:12px; }
+.ride-bar .ride-caption { position:static; transform:none; width:fit-content; min-width:0; max-width:100%; flex:0 1 auto; font-size:12px; }
+body:not(.is-start):not(.is-spectating) .scene > .ride-bar { justify-content:space-between; }
+body:not(.is-start):not(.is-spectating) .scene > .ride-bar .question-steps { margin-left:auto; }
+.question-steps { display:flex; align-items:center; flex:none; gap:0; padding:0; background:none; border:0; box-shadow:none; }
+.progress-step { position:relative; width:27px; height:42px; padding:0; border:0; background:repeating-linear-gradient(90deg,transparent 0 5px,#628367 5px 8px,transparent 8px 13px) center 23px/100% 15px no-repeat; cursor:pointer; }
+.progress-step::after { content:''; position:absolute; left:0; right:0; top:26px; height:8px; border-block:2px solid #4b7153; }
+.progress-step::before { content:''; position:absolute; z-index:1; width:13px; height:13px; left:50%; top:23px; transform:translateX(-50%); border:2px solid #36543c; border-radius:50%; background:#f5f8ec; box-shadow:0 1px 0 #ffffff66; }
+.progress-step.is-done::before { background:#172d22; border-color:#172d22; }
+.progress-step.is-passed::after { border-color:#203d2a; background:#48734f55; }
+.progress-step:disabled { opacity:1; cursor:default; }
+.progress-step:not(:disabled):hover::before { box-shadow:0 0 0 3px #e8c76f; }
+.progress-step:focus-visible { outline-offset:0; border-radius:6px; }
+.progress-cart { position:absolute; top:3px; left:50%; width:19px; height:13px; transform:translateX(-50%); background:#e7c86c; border:2px solid #294a34; border-radius:3px 3px 5px 5px; box-shadow:inset 0 -3px #c4953e; }
+.progress-cart::before { content:''; position:absolute; top:3px; left:2px; right:2px; height:2px; background:#755e2e; }
+.progress-cart::after { content:''; position:absolute; bottom:-6px; left:0; width:5px; height:5px; border-radius:50%; background:#20392a; box-shadow:10px 0 #20392a; }
+.scene .skip-button { top:56px; }
+
+/* 観戦の操作盤。再生と前後移動を主操作にし、設定類はメニューへまとめる。 */
+.spectator-hud { width:min(1280px,100%); margin:0 auto; flex:none; padding:9px 12px 5px; position:relative; z-index:15; border:2px solid #44664a; border-radius:14px; background:linear-gradient(160deg,#2c4937,#203b2d); box-shadow:0 3px 0 #152c20,inset 0 1px #78977b; color:#f2f4df; }
+.spectator-console { display:flex; align-items:center; justify-content:space-between; gap:12px; }
+.spectator-heading { min-width:0; display:grid; gap:3px; font-size:13px; line-height:1.4; }
+#spectatorPosition { font-size:11px; color:#c6d9bf; font-variant-numeric:tabular-nums; }
 .spectator-hud .profile-guide,.spectator-choice { display:none; }
-.spectator-heading { font-size:14px; margin-bottom:6px; }
-.spectator-controls { gap:6px; }
-.spectator-controls button { min-height:36px; padding:6px 10px; font-size:13px; }
-#spectatorComparison { position:absolute; right:12px; top:8px; z-index:18; font-size:13px; }
-#spectatorComparison summary { padding:3px 6px; background:#fafbf6; border-radius:6px; }
-#spectatorComparison[open] { padding:10px; width:min(600px,calc(100vw - 40px)); max-height:50dvh; overflow:auto; background:#fafbf6; border:1px solid #b9cbb9; border-radius:12px; box-shadow:0 12px 40px #20302633; }
-.spectator-heading { padding-right:210px; }
-.model-dock { position:absolute; z-index:8; left:10px; top:56px; bottom:132px; width:clamp(128px,20%,220px); overflow:auto; padding:3px; display:flex; flex-direction:column; gap:7px; }
-.model-card { position:relative; padding:10px; border:1px solid #b5c7b6; border-radius:12px; background:rgba(250,252,248,.96); color:#203026; flex:none; }
-.model-card-name { display:block; font-size:14px; overflow-wrap:anywhere; }
-.model-card.is-active { border:2px solid #3b6950; box-shadow:0 3px 10px #20302622; }
-.model-card-choice { display:none; width:24px; height:24px; border-radius:50%; color:#fff; text-align:center; font-weight:800; line-height:24px; margin-bottom:6px; }
-.model-card.answer-a .model-card-choice { display:block; background:#2259b2; }
-.model-card.answer-b .model-card-choice { display:block; background:#ab393a; margin-left:auto; }
-.model-bubble { position:relative; margin:5px 0 0; border-radius:10px; border:1px solid #b8c9ba; padding:8px; background:white; font-size:13px; line-height:1.65; overflow-wrap:anywhere; }
-.answer-a .model-bubble { border-top-left-radius:0; }
-.answer-b .model-bubble { border-top-right-radius:0; }
-.model-rider { position:absolute; z-index:9; top:38%; left:50%; transform:translateX(-50%); padding:6px 10px; border:2px solid #f5faf1; border-radius:8px; background:#31563d; color:white; font-size:clamp(11px,1.1vw,15px); font-weight:800; max-width:90%; text-align:center; overflow-wrap:anywhere; }
+.spectator-controls { display:flex; gap:6px; align-items:center; flex:none; }
+.spectator-controls button,.spectator-menu>summary { display:flex; justify-content:center; align-items:center; gap:5px; min-height:40px; border:1px solid #8aa482; border-bottom:3px solid #142c1d; border-radius:9px; padding:6px 9px; background:linear-gradient(#547556,#38563e); color:#f7f8e9; box-shadow:inset 0 1px #a8bb9966; cursor:pointer; font-size:12px; font-weight:800; }
+.spectator-controls button:disabled { opacity:.4; cursor:default; }
+.spectator-controls button:not(:disabled):active { transform:translateY(2px); border-bottom-width:1px; }
+.spectator-controls button:not(:disabled):hover,.spectator-menu>summary:hover { filter:brightness(1.1); }
+.spectator-controls .console-step { width:38px; padding:6px; }
+.spectator-controls svg { width:22px; height:22px; fill:currentColor; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; flex:none; }
+.spectator-controls .console-play { min-width:96px; color:#263d2b; background:linear-gradient(#f4dc8e,#dfb958); border-color:#e6c96a; border-bottom-color:#8d6a2c; }
+.play-icon { width:15px; height:16px; display:inline-block; background:currentColor; clip-path:polygon(15% 0,100% 50%,15% 100%); }
+.play-icon.is-pausing { clip-path:polygon(5% 0,38% 0,38% 100%,5% 100%,5% 0,65% 0,100% 0,100% 100%,65% 100%,65% 0); }
+.spectator-controls .console-skip { background:#2a4533; font-size:11px; }
+.console-skip svg { width:15px; height:15px; }
+.spectator-menu { position:relative; }
+.spectator-menu>summary { width:36px; padding:6px; list-style:none; letter-spacing:1px; }
+.spectator-menu>summary::-webkit-details-marker { display:none; }
+.spectator-menu-panel { position:absolute; top:calc(100% + 8px); right:0; z-index:30; width:min(350px,calc(100vw - 32px)); max-height:60dvh; overflow:auto; padding:10px; border:2px solid #4c7054; border-radius:12px; background:#f7f9ed; color:#203b2d; box-shadow:0 8px 24px #10231e44; }
+.spectator-menu-panel>button { width:100%; justify-content:flex-start; margin-top:7px; min-height:42px; background:#e7edde; border:1px solid #bccbb2; color:#243e2c; box-shadow:none; font-size:14px; }
+#spectatorComparison { font-size:14px; }
+#spectatorComparison>summary { padding:10px; border:1px solid #bccbb2; border-radius:8px; background:#e7edde; }
+.spectator-table { max-height:240px; overflow:auto; overscroll-behavior:contain; }
+.spectator-answer { padding:12px 0; border-top:1px solid #cbd6c7; display:grid; gap:5px; font-size:14px; line-height:1.6; overflow-wrap:anywhere; }
+.spectator-answer small { color:#46564b; font-size:12px; }
+#spectatorRoute .ride-bar { position:static; justify-content:space-between; gap:8px; margin-top:3px; }
+#spectatorRoute .ride-caption { background:#b4ceaa22; color:#e5efd8; font-size:11px; padding:5px 8px; backdrop-filter:none; }
+#spectatorRoute .progress-step { background-image:repeating-linear-gradient(90deg,transparent 0 5px,#8caa7c 5px 8px,transparent 8px 13px); }
+#spectatorRoute .progress-step::after { border-color:#91ae7e; }
+#spectatorRoute .progress-step.is-passed::after { border-color:#dfc366; }
+.scene.is-paused *, .scene.is-paused *::before, .scene.is-paused *::after { animation-play-state:paused !important; }
+.is-spectating .scene .skip-button { display:none; }
+.is-spectating .scene { min-height:360px; }
+
+/* 空の上に並ぶモデル枠。幅に合わせたページ分割で枠を画面内に収める。 */
+.model-gallery { position:absolute; z-index:8; left:12px; right:12px; top:10px; }
+.model-gallery-row { display:flex; align-items:center; gap:0; }
+.model-dock { display:grid; gap:8px; min-width:0; flex:1; }
+.model-token,.model-rider,.model-flight { border:2px solid #e6d593; border-bottom:4px solid #25482f; border-radius:9px; background:linear-gradient(#456b4d,#2b5037); color:#fffbe9; box-shadow:0 2px 6px #193e3033,inset 0 1px #a9c29a55; font-weight:800; }
+.model-token { position:relative; width:100%; min-width:0; height:44px; padding:5px 9px; text-align:left; cursor:pointer; }
+.model-token-name { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:13px; line-height:1.2; }
+.model-token-status { display:block; font-size:10px; font-weight:500; color:#e2e9cd; margin-top:3px; }
+.model-token:not(.has-answer) { border-color:#9db997; border-bottom-color:#42674b; background:#3f674a99; cursor:default; }
+.model-token.is-riding { opacity:.55; }
+.model-token.is-active { box-shadow:0 0 0 2px #e4cb7a66; }
+.model-token:not(:disabled):hover { filter:brightness(1.12); }
+.model-token[aria-expanded="true"] { border-color:#f7df83; }
+.model-token-choice { display:none; position:absolute; top:5px; width:20px; height:20px; border-radius:6px; color:white; font-size:12px; line-height:20px; text-align:center; }
+.model-token.answer-a { padding-left:33px; }
+.model-token.answer-a .model-token-choice { display:block; left:6px; background:#2259b2; }
+.model-token.answer-b { padding-right:33px; }
+.model-token.answer-b .model-token-choice { display:block; right:6px; background:#ab393a; }
+.model-pages { display:flex; gap:3px; width:84px; padding-left:6px; flex:none; align-items:center; color:#244631; font-size:10px; font-weight:800; }
+.model-pages button { width:24px; height:34px; flex:none; padding:0; border:1px solid #577b59; border-bottom:3px solid #3c5e42; border-radius:6px; color:#f9f5db; background:#3f6549; font-size:24px; line-height:1; cursor:pointer; }
+.model-pages button:disabled { opacity:.35; cursor:default; }
+#modelPagePosition { flex:1; text-align:center; min-width:0; }
+.model-speech { position:absolute; top:calc(100% + 9px); left:0; width:min(360px,100%); max-height:max(64px,calc(35cqh - 65px)); display:flex; flex-direction:column; border:2px solid #3c6547; border-radius:12px; background:#fffff4; box-shadow:0 4px 0 #35533d22; color:#213b2c; }
+.model-speech::before { content:''; position:absolute; top:-7px; left:var(--bubble-tail,24px); width:10px; height:10px; transform:translateX(-50%) rotate(45deg); border-left:2px solid #3c6547; border-top:2px solid #3c6547; background:#fffff4; }
+.model-speech.is-reading { z-index:20; max-height:min(300px,calc(100cqh - 160px)); box-shadow:0 10px 30px #243b3540; }
+.model-speech-heading { display:flex; align-items:center; gap:8px; padding:2px 5px 0 9px; min-height:28px; flex:none; }
+.model-speech-heading strong { min-width:0; flex:1; font-size:12px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.model-speech.answer-a .model-speech-heading strong { color:#2259b2; }
+.model-speech.answer-b .model-speech-heading strong { color:#ab393a; }
+#modelSpeechClose { width:28px; height:26px; padding:0; background:none; border:0; color:#3e5e47; font-size:22px; cursor:pointer; }
+#modelSpeechText { min-height:0; overflow:auto; overscroll-behavior:contain; margin:0; padding:2px 9px 8px; font-size:14px; line-height:1.6; white-space:pre-wrap; overflow-wrap:anywhere; scrollbar-width:thin; }
+.model-rider { position:absolute; z-index:9; top:38%; left:50%; transform:translateX(-50%); width:max-content; max-width:min(220px,80vw); padding:7px 12px; text-align:center; font-size:13px; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
 .model-rider.is-boarding { animation:model-board .55s ease-out; }
-@keyframes model-board { from { transform:translate(-230%,-60%) scale(.7); opacity:.25; } to { transform:translate(-50%,0) scale(1); opacity:1; } }
+.model-flight { position:absolute; z-index:14; top:0; left:0; transform-origin:0 0; display:flex; align-items:center; justify-content:center; padding:5px 9px; overflow:hidden; white-space:nowrap; font-size:13px; pointer-events:none; }
+@keyframes model-board { from { transform:translate(-160%,-60%) scale(.8); opacity:.25; } to { transform:translate(-50%,0) scale(1); opacity:1; } }
 .target-left.is-launched { animation:target-fly-left .65s ease-in forwards; }
 .target-right.is-launched { animation:target-fly-right .65s ease-in forwards; }
 @keyframes target-fly-left { from { transform:translateX(var(--off)) rotate(0); opacity:1; } to { transform:translate(calc(var(--off) - 24cqw),-26cqh) rotate(-150deg) scale(.5); opacity:0; } }
 @keyframes target-fly-right { from { transform:translateX(calc(var(--off) * -1)) rotate(0); opacity:1; } to { transform:translate(calc(var(--off) * -1 + 24cqw),-26cqh) rotate(150deg) scale(.5); opacity:0; } }
+
+.spectator-settings { display:grid; gap:10px; margin:10px 0; }
+.spectator-settings label:not(.spectator-check) { display:grid; gap:8px; }
+.spectator-settings select { width:100%; font:inherit; padding:10px; color:#203026; background:#fff; border:1px solid #92a78f; border-radius:8px; }
+.spectator-models { border:1px solid #bccbb9; border-radius:10px; padding:12px; }
+#spectatorModels { max-height:140px; overflow:auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:6px; }
+.spectator-check { display:flex; align-items:center; gap:10px; min-height:44px; }
+.spectator-check input { width:20px; height:20px; accent-color:#3a6041; }
+#spectatorBegin:disabled { background:#d5dad4; color:#586458; cursor:default; }
 .config-lead { font-size:16px; font-weight:700; color:#3f5946; }
 #spectatorConfig .result-panel { width:min(780px,100%); }
-#spectatorModels { max-height:140px; }
-.spectator-settings { margin:10px 0; gap:10px; }
 .advanced-settings { border:1px solid #c4d1bf; border-radius:10px; padding:10px; }
 .advanced-settings[open] { display:grid; gap:10px; }
 #spectatorCount { font-weight:800; margin:10px 0; }
 #spectatorPersonal { font-size:12px; margin:4px 0; }
+@media(max-width:800px) {
+ .spectator-console { flex-wrap:wrap; gap:6px; }
+ .spectator-heading { display:flex; justify-content:space-between; align-items:center; gap:8px; width:100%; }
+ .spectator-controls { margin:0 auto; }
+}
+@media(max-width:680px) {
+ .ride-bar { flex-wrap:wrap; gap:1px; left:5px; right:5px; }
+ .ride-bar .ride-caption { font-size:11px; padding:6px 8px; }
+ #spectatorRoute .ride-bar { justify-content:center; gap:0 8px; }
+ #spectatorRoute .ride-caption { font-size:10px; }
+ .progress-step { width:25px; }
+ .scene .skip-button { top:87px; }
+}
 @media(max-width:650px) {
  .app-shell { gap:6px; padding:6px; }
  .topbar { flex-wrap:nowrap; gap:6px; }
@@ -489,41 +548,19 @@ button:focus-visible, summary:focus-visible, select:focus-visible { outline:3px 
  .question-card { max-height:31dvh; padding:10px; }
  .question-body { font-size:15px; }
  .question-note,.common-assumptions { font-size:12px; }
- .scene { min-height:280px; }
- .ride-bar { gap:5px; left:5px; right:5px; }
- .ride-bar .ride-caption { font-size:11px; padding:6px; }
- .question-steps { padding:4px; }
- .progress-step { width:17px; }
- .progress-step::before { left:1px; right:1px; height:13px; }
- .progress-step:not(:last-child)::after { left:12px; width:8px; }
- .spectator-heading { font-size:12px; padding-right:0; }
- #spectatorComparison { position:static; margin-top:4px; }
- #spectatorComparison[open] { position:absolute; top:100%; left:0; width:100%; }
- .spectator-controls { overflow-x:auto; }
- .model-dock { left:5px; top:50px; width:112px; bottom:130px; }
- .model-card { padding:7px; }
- .model-card-name { font-size:12px; }
- .model-bubble { padding:6px; font-size:12px; }
- .model-rider { top:38%; padding:4px 6px; }
+ .spectator-hud { padding:6px 7px 1px; }
+ .spectator-heading { font-size:11px; }
+ #spectatorPosition { font-size:10px; flex:none; }
+ .spectator-controls { gap:4px; }
+ .spectator-controls .console-step { width:34px; }
+ .spectator-controls .console-play { min-width:80px; padding:6px; }
+ .spectator-controls .console-skip { padding:6px; font-size:10px; }
+ .spectator-menu>summary { width:32px; }
+ .is-spectating .question-card { max-height:22dvh; }
+ .model-gallery { left:8px; right:8px; top:8px; }
+ .model-token-name { font-size:12px; }
+ .model-rider { padding:5px 8px; font-size:12px; }
 }
 @media(max-height:620px) { .app-shell { height:auto; min-height:100dvh; overflow:visible; } .scene { flex:none; height:360px; } .question-card { max-height:none; } }
 @media(prefers-reduced-motion:reduce) { .model-rider.is-boarding,.target.is-launched { animation:none !important; } .target.is-launched { opacity:0; } }
-/* モデル枠を画面上端の帯にまとめ、狭い画面でも人型を覆わない。 */
-.model-dock { position:static; width:auto; max-height:150px; overflow:auto; display:flex; flex-direction:row; gap:7px; margin-top:7px; padding:2px; align-items:stretch; }
-.model-card { flex:1 0 150px; min-width:0; padding:8px 10px; }
-.model-card-name { padding-right:26px; }
-.model-card-choice { position:absolute; top:6px; right:7px; margin:0; }
-.model-card.answer-a .model-card-choice { left:7px; right:auto; }
-.model-card.answer-a .model-card-name { padding-left:28px; padding-right:0; }
-.model-bubble { max-height:72px; overflow:auto; }
-@media(max-width:650px) {
- .model-dock { width:auto; max-height:128px; margin-top:4px; gap:5px; }
- .model-card { flex:1 0 96px; padding:7px; }
- .model-card-name { font-size:12px; }
- .model-card-choice { width:20px; height:20px; font-size:12px; line-height:20px; }
- .model-bubble { max-height:60px; }
- .is-spectating .question-card { max-height:22dvh; }
- .is-spectating .scene { min-height:220px; }
-}
-/* 拡大表示や短い画面ではスクロールで全操作に到達できるようにする。 */
-.app-shell { overflow:auto; }
+

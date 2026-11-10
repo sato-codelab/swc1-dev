@@ -33,7 +33,7 @@
     configOrigin=phase;if(phase==='spectating')player.pause();
     const config=player.config;if(reducedMotion.matches)config.mode='fast';spectatorView.open(config);
   }
-  spectatorView.bind({begin:config=>beginSpectator(config),close:()=>{spectatorView.close();if(configOrigin==='spectating')spectatorView.focus();},diagnose:showStart,
+  spectatorView.bind({begin:config=>beginSpectator(config),close:()=>{spectatorView.close();if(configOrigin==='spectating')spectatorView.focus();},inspect:()=>player.pause(),
     toggle:()=>player.toggle(),previous:()=>player.previous(),next:()=>player.next(),skip:()=>player.skip(),configure:openSpectator,end:()=>player.end()});
   view.onWatch(openSpectator);
   view.onWatchQuestion(()=>{if(phase==='confirmation')beginSpectator({...player.config,modelIds:modelData.MOCK_AI_MODELS.map(m=>m.id),mode:'normal',filter:'all',order:'question',autoplay:true},true);});
@@ -61,7 +61,7 @@
   view.setInstructions(core.COMMON_INSTRUCTIONS);
   view.onStart(()=>{if(store.isComplete())showSummary();else {store.goTo(store.order.findIndex(id=>!store.answers[id]));showQuestion();}});
   view.onStartRestart(restart);
-  view.onProgress(index=>{if(phase==='spectating'){player.jumpToQuestion(index);return;}if(['question','confirmation','animating'].includes(phase)&&store.goTo(index))showQuestion();});
+  view.onProgress(index=>{if(phase==='spectating'){player.jumpToQuestion(index);return;}if(['question','confirmation','animating'].includes(phase)&&store.answers[store.order[index]]&&store.goTo(index))showQuestion();});
   view.onBrandHome(()=>{leaveSpectator();scene.cancel();window.location.reload();});
   view.onChoose(({optionId,position})=>{
     if(phase!=='question')return;

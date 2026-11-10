@@ -33,16 +33,25 @@
     </section>
 
     <section id="spectatorHud" class="spectator-hud" aria-label="AI回答の観戦" hidden>
-      <div class="spectator-heading"><strong id="spectatorStatus" role="status"></strong><span id="spectatorPosition"></span></div>
-      <p id="spectatorNotice" class="profile-guide"></p>
-      <div class="spectator-controls" role="group" aria-label="再生操作">
-        <button id="spectatorPrevious" type="button">前へ</button><button id="spectatorPlay" type="button">再生</button>
-        <button id="spectatorNext" type="button">次へ</button><button id="spectatorSkip" type="button">この演出をスキップ</button>
-        <button id="spectatorConfigure" type="button">観戦の設定</button><button id="spectatorEnd" type="button">観戦を終了</button>
+      <div class="spectator-console">
+        <div class="spectator-heading"><strong id="spectatorStatus" role="status"></strong><span id="spectatorPosition"></span></div>
+        <div class="spectator-controls" role="group" aria-label="再生操作">
+          <button id="spectatorPrevious" class="console-step" type="button" aria-label="前の回答を再生" title="前の回答を再生"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5v14M18 5 8 12l10 7Z"/></svg></button>
+          <button id="spectatorPlay" class="console-play" type="button"><span id="spectatorPlayIcon" class="play-icon" aria-hidden="true"></span><span id="spectatorPlayLabel">再生</span></button>
+          <button id="spectatorNext" class="console-step" type="button" aria-label="次の回答を再生" title="次の回答を再生"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 5v14M6 5l10 7-10 7Z"/></svg></button>
+          <button id="spectatorSkip" class="console-skip" type="button" title="この演出をスキップして回答を見る"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 6 8 6-8 6Zm10 0 8 6-8 6Z"/></svg><span>演出を省略</span></button>
+          <details id="spectatorMenu" class="spectator-menu">
+            <summary aria-label="観戦メニュー" title="観戦メニュー"><span aria-hidden="true">•••</span><span class="sr-only">観戦メニュー</span></summary>
+            <div class="spectator-menu-panel">
+              <details id="spectatorComparison"><summary>この問題のAI回答を比較</summary><p id="spectatorDistribution"></p><div id="spectatorTable" class="spectator-table"></div></details>
+              <button id="spectatorConfigure" type="button">観戦の設定</button>
+              <button id="spectatorEnd" type="button">観戦を終了</button>
+            </div>
+          </details>
+        </div>
       </div>
-      <aside id="modelDock" class="model-dock" aria-label="観戦中のモデル" hidden></aside>
-      <p id="spectatorChoice" class="spectator-choice"></p>
-      <details id="spectatorComparison"><summary>この問題のAI回答を比較する</summary><p id="spectatorDistribution"></p><div id="spectatorTable" class="spectator-table"></div></details>
+      <div id="spectatorRoute"></div>
+      <p id="spectatorNotice" class="profile-guide"></p><p id="spectatorChoice" class="spectator-choice"></p>
     </section>
     <section class="scene is-running" id="scene" aria-label="原っぱの中を走るトロッコの一人称視点">
       <div class="world-layer" id="worldLayer" aria-hidden="true">
@@ -87,12 +96,25 @@
         <div class="impact-effect" id="impactEffect"><span></span><span></span><span></span><span></span><span></span></div>
       </div>
 
-      <div class="ride-bar"><div class="ride-caption" aria-live="polite">
+      <div class="ride-bar" id="rideBar"><div class="ride-caption" aria-live="polite">
         <span class="status-dot"></span>
         <span id="sceneStatus">ガタン、ゴトン……トロッコは原っぱを進んでいます</span>
       </div>
 
       <nav id="questionSteps" class="question-steps" aria-label="問題への移動"></nav></div>
+      <aside id="modelGallery" class="model-gallery" aria-label="AIの回答" hidden>
+        <div class="model-gallery-row">
+          <div id="modelDock" class="model-dock"></div>
+          <nav id="modelPages" class="model-pages" aria-label="モデルの表示切り替え" hidden>
+            <button id="modelPagePrevious" type="button" aria-label="前のモデルを表示">‹</button><span id="modelPagePosition"></span><button id="modelPageNext" type="button" aria-label="次のモデルを表示">›</button>
+          </nav>
+        </div>
+        <section id="modelSpeech" class="model-speech" aria-labelledby="modelSpeechTitle" hidden>
+          <div class="model-speech-heading"><strong id="modelSpeechTitle"></strong><button id="modelSpeechClose" type="button" aria-label="回答を閉じる">×</button></div>
+          <p id="modelSpeechText" tabindex="0" aria-label="AIの記録済みの説明"></p>
+        </section>
+      </aside>
+      <div id="modelFlight" class="model-flight" aria-hidden="true" hidden></div>
       <button class="skip-button" id="skipButton" type="button">演出をスキップ</button>
 
       <div class="choices" id="choices" role="group" aria-label="回答選択">
@@ -176,7 +198,6 @@
       </div>
       <p id="spectatorCount" role="status"></p><p id="spectatorPersonal" class="profile-guide"></p>
       <button id="spectatorClearFilter" type="button" class="text-button">絞り込みを解除する</button>
-      <button id="spectatorDiagnose" type="button" class="restart-button">スタート画面に戻る</button>
       <button id="spectatorBegin" type="button" class="next-button">観戦をはじめる</button>
       <button id="spectatorConfigClose" type="button" class="restart-button">戻る</button>
       <details class="profile-details"><summary>AI回答の出典と条件</summary><div id="spectatorSources"></div></details>
@@ -191,6 +212,7 @@
   <script src="playback-clock.js" defer></script>
   <script src="spectator.js" defer></script>
   <script src="text-replay.js" defer></script>
+  <script src="spectator-cast.js" defer></script>
   <script src="spectator-view.js" defer></script>
   <script src="scene.js" defer></script>
   <script src="view.js" defer></script>
